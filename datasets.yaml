@@ -1,0 +1,19 @@
+---
+### datasets.yaml ###
+—
+Name: ‘name of data set’ 
+Short_name #short name for convenience 
+Domain: #’set value below’
+Math: math
+Reading: reading
+Writing: writing
+google_sheet: #‘extract google sheet link here
+Dataset_description: #put in abstract here
+Dataset_citation: #citation for the data set / paper  APA7: (Author, A., (year), Title of the data set version number), Publisher name, https://doi.org/XXX)
+Article_citation: #full article citation
+Short_citation: #short internal citation
+Curator: #person that did ROBIS and curation of the data set 
+Last_update: #when the paper was added or updated
+Moderators: [] #write out the moderators column name separated by comma.
+Subset: [] #subset of data, eg. replication
+—
