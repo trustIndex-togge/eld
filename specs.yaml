@@ -1,0 +1,229 @@
+ ### specs.yaml ###
+
+- Field: unique_row
+ Description: 
+ Type: number
+ Format: 
+ Example: 
+ Required: yes
+
+- Field: study_ID
+ Description: 
+ Type: string
+ Format: 
+ Example: Smith2020
+ Required:
+
+- Field: long_cite
+ Description: 
+ Type: string
+ Format: APA 7th edition
+ Example: Odom, S. L., Brantlinger, E., Gersten, R., Horner, R. H., Thompson, B., & Harris, K. R. (2005). Research in Special Education: Scientific Methods and Evidence-Based Practices. Exceptional Children, 71(2), 137–148. https://doi.org/10.1177/001440290507100201
+
+ Required: Yes
+
+- Field: short_cite
+ Description: 
+ Type: string
+ Format: 
+ Example: 
+ Required: yes
+
+- Field: peer_reviewed
+ Description: 
+ Type:  options
+ options:
+“Yes”
+“No”
+ Required: Yes
+
+#------------------
+# Population
+#—---------------
+
+- Field: Country
+ Description: where the study was conducted
+ Type: string
+ Format: one word
+ Example: “Sweden”
+ Required: yes
+
+- Field: Grade
+ Description: class 
+ Type: string
+ Format: grade written out with words
+ Example: kindergarten, one, two, three, … twelve
+ Required: yes
+
+- Field: Sample_size
+ Description: 
+ Type: integer
+ Format: total number of participants
+ Example: 12
+ Required: yes
+
+- field: gender_1
+  description:  proportion of female participants in intervention group
+  type:   numeric
+  format:
+  example:
+  required:     no
+
+- field:        gender_2
+  description:  proportion of female participants in control group
+  type:         numeric
+  format:
+  example:
+  required:     no
+
+
+#-------------
+# Design
+#--------------
+
+- Field: study_design
+ Description: indicate what type of study design used
+ Type: options
+ Options: 
+RCT: Random controlled trials
+QES: Quasi-experimental study
+CRCT: Cluster randomized trials
+Other: Any other type of study design
+ Required: yes
+
+- field:        participant_design
+  description:  indicates the groups that are the comparison of interest for effect size
+  type:         options
+  options:
+    - between:    between two groups of participants
+    - within_two: within one group of participants with two measurement points (e.g. pre and post)
+    - within_one: within one group of participants with one measurement point (e.g. percent correct)
+  required:     yes
+
+- Field: implementation
+ Description: Who implemented the intervention? 
+ Type: options
+ Options:
+Researcher: Intervention implemented by researcher or assistant
+Teacher: Intervention implemented by teachers or special educator
+Other: Intervention implemented by any other than above
+ Required: yes
+
+- field: duration_week
+  description: how many weeks did the intervention run?
+  type:         numeric
+  Format: weeks
+  Example: 4
+  required:  no
+
+- field: frequency_n
+  description: how many occasions did the intervention run?
+  type:         numeric
+  Format: occasions
+  Example: 16
+  required:  no
+
+- field: intensity_n
+  description: how long sessions did the intervention use?
+  type:         numeric
+  Format: minutes
+  Example: 45
+  required:  no
+
+#---------------------------------------------
+# data for meta-analysis in metafor 
+#----------------------------------------------
+
+- Field: m1i
+ Description: Mean for the intervention group
+ Type: integer
+ Format: 
+ Example:  8.8
+ Required: yes
+
+- Field: sd1i
+ Description: standard deviation for the intervention group
+ Type: integer
+ Format: 
+ Example:  1.2
+ Required: yes
+
+- Field: N1i
+ Description: numbers of participants in the intervention group
+ Type: integer
+ Format: 
+ Example:  30
+ Required: yes
+
+- Field: m2i
+ Description: Mean for the control group
+ Type: integer
+ Format: 
+ Example:  6.5
+ Required: yes
+
+- Field: sd2i
+ Description: standard deviation for the control group
+ Type: integer
+ Format: 
+ Example:  2.5
+ Required: yes
+
+- Field: N2i
+ Description: numbers of participants in the control group
+ Type: integer
+ Format: 
+ Example:  33
+ Required: yes
+
+#-------------------------------
+# Focal tests - optional?
+#-------------------------------
+
+field:        t
+  description:  t-statistic for the comparison of interest as specified in participant_design
+  type:         numeric
+  format:
+  example:
+  required:     yes
+
+- field:        F
+  description:  F-statistic for the comparison of interest as specified in participant_design (main effect comparing two measures)
+  type:         numeric
+  format:
+  example:
+  required:     yes
+
+- field:        r
+  description:  Pearson's correlation coefficient used to calculate effect size.
+  type:         numeric
+  format:
+  example:
+  required:     yes
+
+- field:        d
+  description:  Cohen's d effect size measure
+  type:         numeric
+  format:
+  example:
+  required:     yes
+
+- field:        d_var
+  description:  Cohen's d effect size variance
+  type:         numeric
+  format:
+  example:
+  required:     yes
+
+- field:        corr
+  description:  correlation between measures for participant_design within_two
+  type:         numeric
+  format:
+  example:
+  required:     yes
+
+
+
+
+
+---
