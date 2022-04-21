@@ -2,7 +2,7 @@
 ### datasets.yaml ###
 —
 Name: ‘name of data set’ 
-Short_name #short name for convenience 
+Short_name: #short name for convenience 
 Domain: #’set value below’
 Math: math
 Reading: reading
