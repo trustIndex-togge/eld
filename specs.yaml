@@ -1,4 +1,5 @@
- ### specs.yaml ###
+---
+### specs.yaml ###
 
 - Field: unique_row
  Description: 
@@ -19,7 +20,6 @@
  Type: string
  Format: APA 7th edition
  Example: Odom, S. L., Brantlinger, E., Gersten, R., Horner, R. H., Thompson, B., & Harris, K. R. (2005). Research in Special Education: Scientific Methods and Evidence-Based Practices. Exceptional Children, 71(2), 137–148. https://doi.org/10.1177/001440290507100201
-
  Required: Yes
 
 - Field: short_cite
@@ -33,8 +33,8 @@
  Description: 
  Type:  options
  options:
-“Yes”
-“No”
+ - “Yes”
+ - “No”
  Required: Yes
 
 #------------------
@@ -62,17 +62,17 @@
  Example: 12
  Required: yes
 
-- field: gender_1
-  description:  proportion of female participants in intervention group
-  type:   numeric
-  format:
-  example:
-  required:     no
+- Field: gender_1
+  Description:  proportion of female participants in intervention group
+  Type:   numeric
+  Format:
+  Example:
+  Required: no
 
-- field:        gender_2
-  description:  proportion of female participants in control group
-  type:         numeric
-  format:
+- Field:        gender_2
+  Description:  proportion of female participants in control group
+  Type:         numeric
+  Format:
   example:
   required:     no
 
@@ -101,22 +101,22 @@ Other: Any other type of study design
   required:     yes
 
 - Field: implementation
- Description: Who implemented the intervention? 
- Type: options
+  Description: Who implemented the intervention? 
+  Type: options
  Options:
 Researcher: Intervention implemented by researcher or assistant
 Teacher: Intervention implemented by teachers or special educator
 Other: Intervention implemented by any other than above
  Required: yes
 
-- field: duration_week
+- Field: duration_week
   description: how many weeks did the intervention run?
   type:         numeric
   Format: weeks
   Example: 4
   required:  no
 
-- field: frequency_n
+- Field: frequency_n
   description: how many occasions did the intervention run?
   type:         numeric
   Format: occasions
@@ -135,52 +135,52 @@ Other: Intervention implemented by any other than above
 #----------------------------------------------
 
 - Field: m1i
- Description: Mean for the intervention group
- Type: integer
- Format: 
- Example:  8.8
- Required: yes
+  Description: Mean for the intervention group
+  Type: integer
+  Format: 
+  Example:  8.8
+  Required: yes
 
 - Field: sd1i
- Description: standard deviation for the intervention group
- Type: integer
- Format: 
- Example:  1.2
- Required: yes
+  Description: standard deviation for the intervention group
+  Type: integer
+  Format: 
+  Example:  1.2
+  Required: yes
 
 - Field: N1i
- Description: numbers of participants in the intervention group
- Type: integer
- Format: 
- Example:  30
- Required: yes
+  Description: numbers of participants in the intervention group
+  Type: integer
+  Format: 
+  Example:  30
+  Required: yes
 
 - Field: m2i
- Description: Mean for the control group
- Type: integer
- Format: 
- Example:  6.5
- Required: yes
+  Description: Mean for the control group
+  Type: integer
+  Format: 
+  Example:  6.5
+  Required: yes
 
 - Field: sd2i
- Description: standard deviation for the control group
- Type: integer
- Format: 
- Example:  2.5
- Required: yes
+  Description: standard deviation for the control group
+  Type: integer
+  Format: 
+  Example:  2.5
+  Required: yes
 
 - Field: N2i
- Description: numbers of participants in the control group
- Type: integer
- Format: 
- Example:  33
- Required: yes
+  Description: numbers of participants in the control group
+  Type: integer
+  Format: 
+  Example:  33
+  Required: yes
 
 #-------------------------------
 # Focal tests - optional?
 #-------------------------------
 
-field:        t
+- field:        t
   description:  t-statistic for the comparison of interest as specified in participant_design
   type:         numeric
   format:
@@ -221,9 +221,6 @@ field:        t
   format:
   example:
   required:     yes
-
-
-
 
 
 ---
