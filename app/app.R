@@ -33,13 +33,28 @@ ui <- fluidPage(
 
 server <- function(input, output) {
   
-  #### sub-grouping function
-  effectsinput <- reactive({
-    data %>% filter(study_design == input$design,
-                    Grade == input$grade) ## add reactive dataframe based on input
+########### sub-grouping function #############
+
+    datagrade <- reactive({                 #### Create reactive dataframe based on selected grade
+        
+        if (any(input$grade == "All")) {
+            data
+        } else {
+            data %>% filter(
+                Grade == input$grade)}
+    })
+    
+  effectsinput <- reactive({                #### Create reactive dataframe based on selected study design and grade
+      
+      if  (any(input$design == "All")) {
+          datagrade()
+      } else {
+      datagrade() %>% filter(
+             study_design == input$design)}
+ 
+                         
   })
-  
-  
+
   #############################
   ### ma based on effect types
   #############################
