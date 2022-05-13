@@ -1,0 +1,8 @@
+unique_row,study_ID,long_cite,short_cite,peer_reviewed,Country,Grade,Sample_size,gender_1,gender_2,study_design,participant_design,implementation,duration_week,frequency_n,intensity_n,m1i,sd1i,N1i,m2i,sd2i,N2i,t,F_stat,r,d,d_var,corr,ai,bi,ci,di,ri,ni
+1,author1,Author1 et al. (2020). Study,Author1 (2020),Yes,USA,one,58,20,30,RCT,between,Teacher,NA,NA,NA,6.31,1.52,20,6.39,1.02,38,NA,NA,NA,NA,NA,NA,1,19,17,19,0.52,107
+2,author2,Author2 et al. (2020). Study,Author2 (2020),Yes,USA,two,123,45,55,QES,between,Teacher,NA,NA,NA,8.6,1.09,50,8.63,1.06,73,NA,NA,NA,NA,NA,NA,5,45,15,28,0.91,115
+3,author3,Author3 et al. (2020). Study,Author3 (2020),Yes,USA,one,230,50,60,RCT,between,Teacher,NA,NA,NA,6.1,1.35,100,8.13,1.17,130,NA,NA,NA,NA,NA,NA,1,99,7,31,-0.56,246
+4,author4,Author4 et al. (2020). Study,Author4 (2020),Yes,USA,two,78,55,45,QES,between,Teacher,NA,NA,NA,8.88,1.85,30,6.12,0.84,48,NA,NA,NA,NA,NA,NA,1,29,4,19,-0.11,189
+5,author5,Author5 et al. (2020). Study,Author5 (2020),Yes,USA,three,35,39,49,RCT,between,Teacher,NA,NA,NA,11.1,1.89,10,1.1,1.52,25,NA,NA,NA,NA,NA,NA,2,8,5,17,-0.05,138
+6,author6,Author6 et al. (2020). Study,Author6 (2020),Yes,USA,four,88,40,70,QES,between,Teacher,NA,NA,NA,6.43,1.65,30,6.62,1.19,58,NA,NA,NA,NA,NA,NA,4,26,14,32,0.25,194
+7,author7,Author7 et al. (2020). Study,Author7 (2020),Yes,USA,one,100,34,34,QES,between,Teacher,NA,NA,NA,7.02,0.76,50,7.65,0.5,50,NA,NA,NA,NA,NA,NA,2,48,18,2,-0.11,243
