@@ -14,10 +14,15 @@ ui <- fluidPage(
     sidebarPanel(
       selectInput(inputId =  "effect_type",
                   label = "Select effect",
-                  choices = c("Odds ratio", "Relative risk", "Hedge's g", "Pearson r")),
+                  choices = c("Odds ratio" = "OR", 
+                              "Relative risk" = "RR", 
+                              "Hedge's g" = "SMD", 
+                              "Fisher's z" = "ZCOR")),
       selectInput(inputId = "ma_model",
                   label = "Select meta-analysis model",
-                  choices = c("Fixed-effects", "Random-effects", "Equal-effects")),
+                  choices = c("Fixed-effects" = "FE", 
+                              "Random-effects" = "REML",
+                              "Equal-effects" = "EE")),
       selectInput(inputId =  "design",
                   label = "Select design",
                   choices = c("All", unique(data$study_design))),
@@ -63,342 +68,64 @@ server <- function(input, output) {
   ### Models print text summary
   
   output$print <- renderPrint({
-    
-    
-    ###### Fixed-effects
-    if (input$ma_model == "Fixed-effects") {
       
-      if (input$effect_type == "Odds ratio") {
-        
-        #data <- escalc("OR", ai = ai, bi = bi,
-        #               ci = ci, di = di,
-        #               data = data)
-        
-        FE_res <- reactive({rma(ai, bi, ci, di, 
-                                method = "FE", measure = "OR", 
-                                data = effectsinput(), slab = short_cite)}) ## create reactive ma dependent on input
-      }
+      # name all possible arguments to calculate effects
+      # filter the method and the effect based on inputs
+      MA_res <- reactive({rma(ai = ai, bi = bi, ci = ci, di = di,
+                              m1i = m1i, sd1i = sd1i, n1i = N1i,
+                              m2i = m2i, sd2i = sd2i, n2i = N2i,
+                              ni = ni, ri = ri,
+                              method = input$ma_model, measure = input$effect_type, 
+                              data = effectsinput(), slab = short_cite)}) ## create reactive ma dependent on input
+      print(MA_res())
       
-      else if (input$effect_type ==  "Relative risk") {
-        
-        #data <- escalc("RR", ai = ai, bi = bi,
-        #               ci = ci, di = di,
-        #               data = data)
-        
-        FE_res <- reactive({rma(ai = ai, n1i = N1i, 
-                                ci = ci, n2i = N2i, 
-                                method = "FE", measure = "OR", 
-                                data = effectsinput(), slab = short_cite)})
-      }
-      
-      else if (input$effect_type ==  "Hedge's g") {
-        
-        #data <- escalc("SMD", m1i = m1i, sd1i = sd1i, n1i = N1i,
-        #                      m2i = m2i, sd2i = sd2i, n2i = N2i,
-        #               data = data)
-        
-        FE_res <- reactive({rma(m1i = m1i, sd1i = sd1i, n1i = N1i,
-                                m2i = m2i, sd2i = sd2i, n2i = N2i,
-                                method = "FE", measure = "SMD", 
-                                data = effectsinput(), slab = short_cite)})
-      }
-      
-      else if (input$effect_type ==  "Pearson r") {
-        
-        #data <- escalc("ZCOR", ri, ni
-        #               data = data)
-        
-        FE_res <- reactive({rma(ri = ri, ni = ni,
-                                method = "FE", measure = "ZCOR", 
-                                data = effectsinput(), slab = short_cite)})
-      }
-      
-      print(FE_res()) ## added () in order for r to understand its an reactive frame
-      
-    }
-    
-    
-    ####### Random-effects
-    else if (input$ma_model == "Random-effects") {
-      
-      if (input$effect_type == "Odds ratio") {
-        
-        #data <- escalc("OR", ai = ai, bi = bi,
-        #               ci = ci, di = di,
-        #               data = data)
-        
-        RE_res <- reactive({rma(ai, bi, ci, di, 
-                                method = "REML", measure = "OR", 
-                                data = effectsinput(), slab = short_cite)})
-      }
-      
-      else if (input$effect_type ==  "Relative risk") {
-        
-        #data <- escalc("RR", ai = ai, bi = bi,
-        #               ci = ci, di = di,
-        #               data = data)
-        
-        RE_res <- reactive({rma(ai = ai, n1i = N1i, 
-                                ci = ci, n2i = N2i, 
-                                method = "REML", measure = "OR", 
-                                data = effectsinput(), slab = short_cite)})
-      }
-      
-      else if (input$effect_type ==  "Hedge's g") {
-        
-        #data <- escalc("SMD", m1i = m1i, sd1i = sd1i, n1i = N1i,
-        #                      m2i = m2i, sd2i = sd2i, n2i = N2i,
-        #               data = data)
-        
-        RE_res <- reactive({rma(m1i = m1i, sd1i = sd1i, n1i = N1i,
-                                m2i = m2i, sd2i = sd2i, n2i = N2i,
-                                method = "REML", measure = "SMD", 
-                                data = effectsinput(), slab = short_cite)})
-      }
-      
-      else if (input$effect_type ==  "Pearson r") {
-        
-        #data <- escalc("ZCOR", ri, ni
-        #               data = data)
-        
-        RE_res <- reactive({rma(ri = ri, ni = ni,
-                                method = "REML", measure = "ZCOR", 
-                                data = data, slab = short_cite)})
-      }
-      
-      print(RE_res())
-      
-    }
-    
-    ##### Equal-effects
-    else if (input$ma_model == "Equal-effects") {
-      
-      if (input$effect_type == "Odds ratio") {
-        
-        #data <- escalc("OR", ai = ai, bi = bi,
-        #               ci = ci, di = di,
-        #               data = data)
-        
-        EE_res <- reactive({rma(ai, bi, ci, di, 
-                                method = "EE", measure = "OR", 
-                                data = effectsinput(), slab = short_cite)})
-      }
-      
-      else if (input$effect_type ==  "Relative risk") {
-        
-        #data <- escalc("RR", ai = ai, bi = bi,
-        #               ci = ci, di = di,
-        #               data = data)
-        
-        EE_res <- reactive({rma(ai = ai, n1i = N1i, 
-                                ci = ci, n2i = N2i, 
-                                method = "EE", measure = "OR", 
-                                data = effectsinput(), slab = short_cite)})
-      }
-      
-      else if (input$effect_type ==  "Hedge's g") {
-        
-        #data <- escalc("SMD", m1i = m1i, sd1i = sd1i, n1i = N1i,
-        #                      m2i = m2i, sd2i = sd2i, n2i = N2i,
-        #               data = data)
-        
-        EE_res <- reactive({rma(m1i = m1i, sd1i = sd1i, n1i = N1i,
-                                m2i = m2i, sd2i = sd2i, n2i = N2i,
-                                method = "EE", measure = "SMD", 
-                                data = effectsinput(), slab = short_cite)})
-      }
-      
-      else if (input$effect_type ==  "Pearson r") {
-        
-        #data <- escalc("ZCOR", ri, ni
-        #               data = data)
-        
-        EE_res <- reactive({rma(ri = ri, ni = ni,
-                                method = "EE", measure = "ZCOR", 
-                                data = effectsinput(), slab = short_cite)})
-      }
-      
-      print(EE_res())
-      
-    }
-    
-  })    
+
+})    
   
   
   ####### forest plots
   
   output$Plot <- renderPlot({
-    
-    
-    ###### Fixed-effects
-    if (input$ma_model == "Fixed-effects") {
-      
-      if (input$effect_type == "Odds ratio") {
+ 
+      MA_res <- reactive({rma(ai = ai, bi = bi, ci = ci, di = di,
+                              m1i = m1i, sd1i = sd1i, n1i = N1i,
+                              m2i = m2i, sd2i = sd2i, n2i = N2i,
+                              ni = ni, ri = ri,
+                              method = input$ma_model, measure = input$effect_type, 
+                              data = effectsinput(), slab = short_cite)}) ## create reactive ma dependent on input
         
-        #data <- escalc("OR", ai = ai, bi = bi,
-        #               ci = ci, di = di,
-        #               data = data)
+        #forest plots for ratios, exponentiate graphs, present 2x2 frequencies
+        if (input$effect_type == "OR" | input$effect_type == "RR") {
+          
+          forest(MA_res(), xlim=c(-16,6), ilab=cbind(ai, bi, ci, di), 
+                 atransf = exp, at=log(c(.10, 1, 10)),
+                 ilab.xpos = c(-10.5, -9.5, -8.5, -7.5),
+                 header="Author(s) and Year", mlab="")
+          
+        }
         
-        FE_res <- reactive({rma(ai, bi, ci, di, 
-                                method = "FE", measure = "OR", 
-                                data = effectsinput(), slab = short_cite)})
-      }
-      
-      else if (input$effect_type ==  "Relative risk") {
+        else if (input$effect_type == "SMD") {
+          
+          forest(MA_res(), xlim=c(-16,6), ilab=cbind(N1i, N2i), 
+                 at=(c(-1.5, 0, 1.5)),
+                 ilab.xpos = c(-8, -6),
+                 header="Author(s) and Year", mlab="")
+        }
         
-        #data <- escalc("RR", ai = ai, bi = bi,
-        #               ci = ci, di = di,
-        #               data = data)
         
-        FE_res <- reactive({rma(ai = ai, n1i = N1i, 
-                                ci = ci, n2i = N2i, 
-                                method = "FE", measure = "OR", 
-                                data = effectsinput(), slab = short_cite)})
-      }
-      
-      else if (input$effect_type ==  "Hedge's g") {
-        
-        #data <- escalc("SMD", m1i = m1i, sd1i = sd1i, n1i = N1i,
-        #                      m2i = m2i, sd2i = sd2i, n2i = N2i,
-        #               data = data)
-        
-        FE_res <- reactive({rma(m1i = m1i, sd1i = sd1i, n1i = N1i,
-                                m2i = m2i, sd2i = sd2i, n2i = N2i,
-                                method = "FE", measure = "SMD", 
-                                data = effectsinput(), slab = short_cite)})
-      }
-      
-      else if (input$effect_type ==  "Pearson r") {
-        
-        #data <- escalc("ZCOR", ri, ni
-        #               data = data)
-        
-        FE_res <- reactive({rma(ri = ri, ni = ni,
-                                method = "FE", measure = "ZCOR", 
-                                data = effectsinput(), slab = short_cite)})
-      }
-      
-      forest(FE_res(), xlim=c(-16,6), ilab=cbind(N1i, N2i), ilab.xpos=c(-8, -6),
-             header="Author(s) and Year", mlab="")
-      
-    }
-    
-    
-    #      ####### Random-effects
-    #      if (input$ma_model == "Random-effects") {
-    #        
-    #        if (input$effect_type == "Odds ratio") {
-    #          
-    #          #data <- escalc("OR", ai = ai, bi = bi,
-    #          #               ci = ci, di = di,
-    #          #               data = data)
-    #          
-    #          RE_res <- rma(ai, bi, ci, di, 
-    #                        method = "REML", measure = "OR", 
-    #                        data = effectsinput(), slab = short_cite)
-    #        }
-    #        
-    #        else if (input$effect_type ==  "Relative risk") {
-    #          
-    #          #data <- escalc("RR", ai = ai, bi = bi,
-    #          #               ci = ci, di = di,
-    #          #               data = data)
-    #          
-    #          RE_res <- rma(ai = ai, n1i = N1i, 
-    #                        ci = ci, n2i = N2i, 
-    #                        method = "REML", measure = "OR", 
-    #                        data = effectsinput(), slab = short_cite)
-    #        }
-    #        
-    #        else if (input$effect_type ==  "Hedge's g") {
-    #          
-    #          #data <- escalc("SMD", m1i = m1i, sd1i = sd1i, n1i = N1i,
-    #          #                      m2i = m2i, sd2i = sd2i, n2i = N2i,
-    #          #               data = data)
-    #          
-    #          RE_res <- rma(m1i = m1i, sd1i = sd1i, n1i = N1i,
-    #                        m2i = m2i, sd2i = sd2i, n2i = N2i,
-    #                        method = "REML", measure = "SMD", 
-    #                        data = effectsinput(), slab = short_cite)
-    #        }
-    #        
-    #        else if (input$effect_type ==  "Pearson r") {
-    #          
-    #          #data <- escalc("ZCOR", ri, ni
-    #          #               data = data)
-    #          
-    #          RE_res <- rma(ri = ri, ni = ni,
-    #                        method = "REML", measure = "ZCOR", 
-    #                        data = effectsinput(), slab = short_cite)
-    #        }
-    #        
-    #        print(RE_res)
-    #        
-    #      }
-    #      
-    #      ##### Equal-effects
-    #      if (input$ma_model == "Equal-effects") {
-    #        
-    #        if (input$effect_type == "Odds ratio") {
-    #          
-    #          #data <- escalc("OR", ai = ai, bi = bi,
-    #          #               ci = ci, di = di,
-    #          #               data = data)
-    #          
-    #          EE_res <- rma(ai, bi, ci, di, 
-    #                        method = "EE", measure = "OR", 
-    #                        data = effectsinput(), slab = short_cite)
-    #        }
-    #        
-    #        else if (input$effect_type ==  "Relative risk") {
-    #          
-    #          #data <- escalc("RR", ai = ai, bi = bi,
-    #          #               ci = ci, di = di,
-    #          #               data = data)
-    #          
-    #          EE_res <- rma(ai = ai, n1i = N1i, 
-    #                        ci = ci, n2i = N2i, 
-    #                        method = "EE", measure = "OR", 
-    #                        data = effectsinput(), slab = short_cite)
-    #        }
-    #        
-    #        else if (input$effect_type ==  "Hedge's g") {
-    #          
-    #          #data <- escalc("SMD", m1i = m1i, sd1i = sd1i, n1i = N1i,
-    #          #                      m2i = m2i, sd2i = sd2i, n2i = N2i,
-    #          #               data = data)
-    #          
-    #          EE_res <- rma(m1i = m1i, sd1i = sd1i, n1i = N1i,
-    #                        m2i = m2i, sd2i = sd2i, n2i = N2i,
-    #                        method = "EE", measure = "SMD", 
-    #                        data = effectsinput(), slab = short_cite)
-    #        }
-    #        
-    #        else if (input$effect_type ==  "Pearson r") {
-    #          
-    #          #data <- escalc("ZCOR", ri, ni
-    #          #               data = data)
-    #          
-    #          EE_res <- rma(ri = ri, ni = ni,
-    #                        method = "EE", measure = "ZCOR", 
-    #                        data = effectsinput(), slab = short_cite)
-    #        }
-    #        
-    #        print(EE_res)
-    #        
-    #      }
-    
-  })
+        else if (input$effect_type == "ZCOR") {
+          
+          forest(MA_res(), xlim=c(-16,6), ilab = ni, 
+                 at=c(-1, 0, 1),
+                 ilab.xpos = -6,
+                 header="Author(s) and Year", mlab="")
+          
+        }
+
   
-  
-}  
+})  
 
-
-
-
-
-
-
+}
 
 
 
