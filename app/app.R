@@ -28,7 +28,11 @@ ui <- fluidPage(
                   choices = c("All", unique(data$study_design))),
       selectInput(inputId = "grade",
                   label = "Select grade",
-                  choices = c("All", unique(data$Grade)))),
+                  choices = c("All", unique(data$Grade))),
+      checkboxGroupInput(inputId = "rob", 
+                  label = "Select risk of bias",
+                  c(unique(data$rob)),
+                  selected = (unique(data$rob)))),
     mainPanel(plotOutput('Plot'),
               textOutput("print"))
   )
@@ -49,16 +53,26 @@ server <- function(input, output) {
                 Grade == input$grade)}
     })
     
-  effectsinput <- reactive({                #### Create reactive dataframe based on selected study design and grade
+    
+    robfilter <- reactive({datagrade() %>% filter(
+      rob == input$rob) ## check this out because it doesn't respond properly in the app
+    })
+    
+    
+    effectsinput <- reactive({                #### Create reactive dataframe based on selected study design and grade
       
       if  (any(input$design == "All")) {
-          datagrade()
+          robfilter()
       } else {
-      datagrade() %>% filter(
+      robfilter() %>% filter(
              study_design == input$design)}
  
                          
   })
+  
+    
+
+ 
 
   #############################
   ### ma based on effect types
@@ -97,27 +111,28 @@ server <- function(input, output) {
         #forest plots for ratios, exponentiate graphs, present 2x2 frequencies
         if (input$effect_type == "OR" | input$effect_type == "RR") {
           
-          forest(MA_res(), xlim=c(-16,6), ilab=cbind(ai, bi, ci, di), 
+          forest(MA_res(), xlim=c(-15,9), ilab = cbind(ai, bi, ci, di, rob), 
                  atransf = exp, at=log(c(.10, 1, 10)),
-                 ilab.xpos = c(-10.5, -9.5, -8.5, -7.5),
-                 header="Author(s) and Year", mlab="")
+                 ilab.xpos = c(-9.5, -8.5, -7.5, -6.5, -4),
+                 header="Author(s) and Year", mlab="",
+                 )
           
         }
         
         else if (input$effect_type == "SMD") {
           
-          forest(MA_res(), xlim=c(-16,6), ilab=cbind(N1i, N2i), 
+          forest(MA_res(), xlim=c(-12,7), ilab = cbind(N1i, N2i, rob), 
                  at=(c(-1.5, 0, 1.5)),
-                 ilab.xpos = c(-8, -6),
+                 ilab.xpos = c(-7, -6, -4),
                  header="Author(s) and Year", mlab="")
         }
         
         
         else if (input$effect_type == "ZCOR") {
           
-          forest(MA_res(), xlim=c(-16,6), ilab = ni, 
+          forest(MA_res(), xlim=c(-12,7), ilab = cbind(ni, rob), 
                  at=c(-1, 0, 1),
-                 ilab.xpos = -6,
+                 ilab.xpos = c(-6, -4),
                  header="Author(s) and Year", mlab="")
           
         }
