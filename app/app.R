@@ -33,8 +33,13 @@ ui <- fluidPage(
                   label = "Select risk of bias",
                   c(unique(data$rob)),
                   selected = (unique(data$rob)))),
-    mainPanel(plotOutput('Plot'),
-              textOutput("print"))
+    mainPanel(
+      tabsetPanel(type = "tabs",
+        tabPanel("Plot", plotOutput("Plot")),
+        tabPanel("Summary", textOutput("Summary")),
+        tabPanel("Table", tableOutput("Table"))
+      )
+    )
   )
 )
 
@@ -69,10 +74,6 @@ server <- function(input, output) {
  
                          
   })
-  
-    
-
- 
 
   #############################
   ### ma based on effect types
@@ -81,18 +82,26 @@ server <- function(input, output) {
   ###########################
   ### Models print text summary
   
-  output$print <- renderPrint({
+  output$Summary <- renderPrint({
       
       # name all possible arguments to calculate effects
       # filter the method and the effect based on inputs
+      
+      ## TODO: have pred function after to create predictive intervals and exp logs
       MA_res <- reactive({rma(ai = ai, bi = bi, ci = ci, di = di,
                               m1i = m1i, sd1i = sd1i, n1i = N1i,
                               m2i = m2i, sd2i = sd2i, n2i = N2i,
                               ni = ni, ri = ri,
                               method = input$ma_model, measure = input$effect_type, 
                               data = effectsinput(), slab = short_cite)}) ## create reactive ma dependent on input
-      print(MA_res())
       
+      # add ifelse function to exponentiate log results - TODO
+      print(paste("This meta-analysis was conducted using the ", MA_res()$method, " tau estimator, and the average effect of the intervention was ", 
+                   MA_res()$b, " , (95 % CI [ ", MA_res()$ci.lb, MA_res()$ci.ub, " ], 95% PI [ ", 
+                   MA_res()$pi.lb, MA_res()$pi.ub, " ], z = ", MA_res()$zval, " , p = ", 
+                   round(MA_res()$pval, digits = 10), " Total variance was tau2 = ", 
+                   round(MA_res()$tau2, digits = 2),  " (SD of the true effects across studies was tau = ", 
+                   round(sqrt(MA_res()$tau2), digits = 2),"), and the heterogeneity was I2 = ", MA_res()$I2, "%."))
 
 })    
   
@@ -138,7 +147,14 @@ server <- function(input, output) {
         }
 
   
-})  
+})
+  
+  
+  output$Table <- renderTable({
+    # TODO: make it update with changes, use DT package
+    data
+    
+  })
 
 }
 
