@@ -117,42 +117,43 @@ server <- function(input, output) {
                               method = input$ma_model, measure = input$effect_type, 
                               data = effectsinput(), slab = short_cite)}) ## create reactive ma dependent on input
         
-        #forest plots for ratios, exponentiate graphs, present 2x2 frequencies
-        if (input$effect_type == "OR" | input$effect_type == "RR") {
-          
-          forest(MA_res(), xlim=c(-15,9), ilab = cbind(ai, bi, ci, di, rob), 
-                 atransf = exp, at=log(c(.10, 1, 10)),
-                 ilab.xpos = c(-9.5, -8.5, -7.5, -6.5, -4),
-                 header="Author(s) and Year", mlab="",
-                 )
-          
-        }
-        
-        else if (input$effect_type == "SMD") {
-          
-          forest(MA_res(), xlim=c(-12,7), ilab = cbind(N1i, N2i, rob), 
-                 at=(c(-1.5, 0, 1.5)),
-                 ilab.xpos = c(-7, -6, -4),
-                 header="Author(s) and Year", mlab="")
-        }
-        
-        
-        else if (input$effect_type == "ZCOR") {
-          
-          forest(MA_res(), xlim=c(-12,7), ilab = cbind(ni, rob), 
-                 at=c(-1, 0, 1),
-                 ilab.xpos = c(-6, -4),
-                 header="Author(s) and Year", mlab="")
-          
-        }
+      forest_es <- reactive({rbind(data.frame(es=MA_res()$yi, se=sqrt(MA_res()$vi), #effect size and sd
+                                    study=as_factor(MA_res()$slab), #study label
+                                    #calculate lower and upper bound 95% conf interval
+                                    #TODO:change 1.96 into a criterion variable so conf int can be chosen
+                                    lo.ci = MA_res()$yi - 1.96 * sqrt(MA_res()$vi),  
+                                    up.ci = MA_res()$yi + 1.96 * sqrt(MA_res()$vi)))}) 
+      
+      
+      ggplot2::ggplot(data = forest_es(), aes(x = es, y=study,
+                                            xmin = min(lo.ci) - 3, xmax = max(up.ci) + 3)) +
+        scale_x_continuous(breaks = c(round(1.1*min(forest_es()$lo.ci), 0), 
+                                      round(0.5*min(forest_es()$lo.ci), 0), 
+                                      0, 
+                                      round(MA_res()$b, 2),
+                                      round(0.5*max(forest_es()$up.ci), 0), 
+                                      round(1.1*max(forest_es()$up.ci), 0))) +
+        geom_pointrange(aes(x = MA_res()$b, xmin = MA_res()$ci.lb, xmax = MA_res()$ci.ub), colour = "grey") + #add average effects estimate
+        #scale_x_log10() + TODO: what should be transformed and what not
+        geom_point(aes(colour=factor(effectsinput()$rob))) +#add effect sizes
+        geom_linerange(aes(xmin = lo.ci, xmax = up.ci, colour=factor(effectsinput()$rob))) + #add conf intervals
+        #geom_vline(xintercept = MA_res()$b, colour = "blue") + #intercept line based on average effect
+        labs(
+          x = "Effect size and CI",
+          y = "Study",
+          colour = "Risk of Bias",
+          title = "Meta Analaysis of dataset", #add variables that change depending on dataset,
+          subtitle = "Link to dataset" #add dataset url
+        ) +
+        theme_classic()
 
   
 })
   
   
   output$Table <- renderTable({
-    # TODO: make it update with changes, use DT package
-    data
+    # TODO: make it nicer
+    effectsinput()
     
   })
 
