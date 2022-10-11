@@ -20,7 +20,7 @@ ui <- fluidPage(
                                     "Fisher's z" = "ZCOR")),
             selectInput(inputId = "ma_model",
                         label = "Select meta-analysis model",
-                        choices = c("Fixed-effects (inverse variance)" = "FE", 
+                        choices = c("Fixed-effects" = "FE", 
                                     "Restricted Maximum likelihood Estimator" = "REML",
                                     "DerSimonian-Laird" = "DL",
                                     "Paule-Mandel estimator" = "PM")),
@@ -46,7 +46,9 @@ ui <- fluidPage(
         
         mainPanel(
             tabsetPanel(type = "tabs",
-                        tabPanel("Plot", plotOutput("Plot")),
+                        tabPanel("Plots",
+                                 plotOutput("Plot1"),
+                                 plotOutput("Plot2")),
                         tabPanel("Summary", textOutput("Summary")),
                         tabPanel("Table", tableOutput("Table"))
             )
@@ -132,7 +134,7 @@ server <- function(input, output) {
     
     ####### forest plots
     
-    output$Plot <- renderPlot({
+    output$Plot1 <- renderPlot({
         
         # MA_res <- reactive({rma(ai = ai, bi = bi, ci = ci, di = di,
         #                         m1i = m1i, sd1i = sd1i, n1i = N1i,
@@ -172,6 +174,13 @@ server <- function(input, output) {
             theme_classic()
         
         
+    })
+    
+    output$Plot2 <- renderPlot({
+      
+      
+      metafor::funnel(MA_res())
+      
     })
     
     
