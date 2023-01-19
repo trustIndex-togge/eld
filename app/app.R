@@ -47,8 +47,9 @@ ui <- fluidPage(
         mainPanel(
             tabsetPanel(type = "tabs",
                         tabPanel("Plots",
-                                 plotOutput("Plot1"),
-                                 plotOutput("Plot2")),
+                                 plotOutput("Plot1", hover = hoverOpts(id ="hover_plot1")),
+                                 plotOutput("Plot2", hover = hoverOpts(id ="hover_plot2")),
+                                 verbatimTextOutput("hover_info")),
                         tabPanel("Summary", textOutput("Summary")),
                         tabPanel("Table", tableOutput("Table"))
             )
@@ -98,9 +99,9 @@ server <- function(input, output) {
     forest_es <- reactive({rbind(data.frame(es=MA_res()$yi, se=sqrt(MA_res()$vi), #effect size and sd
                                             study=as_factor(MA_res()$slab), #study label
                                             #calculate lower and upper bound 95% conf interval
-                                            #TODO:change 1.96 into a criterion variable so conf int can be chosen
                                             lo.ci = MA_res()$yi - qnorm(1-(input$conf/2)) * sqrt(MA_res()$vi),  
-                                            up.ci = MA_res()$yi + qnorm(1-(input$conf/2)) * sqrt(MA_res()$vi)))}) 
+                                            up.ci = MA_res()$yi + qnorm(1-(input$conf/2)) * sqrt(MA_res()$vi))
+                                 )}) 
     #############################
     ### ma based on effect types
     #############################
@@ -150,7 +151,8 @@ server <- function(input, output) {
         #                                         lo.ci = MA_res()$yi - 1.96 * sqrt(MA_res()$vi),  
         #                                         up.ci = MA_res()$yi + 1.96 * sqrt(MA_res()$vi)))}) 
         
-        
+        robcol <- c("high"="maroon4", "moderate"="darkgoldenrod4", "low"="royalblue4")
+      
         ggplot2::ggplot(data = forest_es(), aes(x = es, y=study,
                                                 xmin = min(lo.ci) - 3, xmax = max(up.ci) + 3)) +
             scale_x_continuous(breaks = c(round(1.1*min(forest_es()$lo.ci), 0), 
@@ -164,6 +166,7 @@ server <- function(input, output) {
             geom_point(aes(colour=factor(effectsinput()$rob))) +#add effect sizes
             geom_linerange(aes(xmin = lo.ci, xmax = up.ci, colour=factor(effectsinput()$rob))) + #add conf intervals
             #geom_vline(xintercept = MA_res()$b, colour = "blue") + #intercept line based on average effect
+            scale_color_manual(values = robcol) +
             labs(
                 x = "Effect size and CI",
                 y = "Study",
@@ -176,11 +179,50 @@ server <- function(input, output) {
         
     })
     
+
+    
     output$Plot2 <- renderPlot({
       
+      #create the contour line (code by jksakaluk https://tinyurl.com/3bdznjav)
+      contour.seq <- seq(0, max(forest_es()$se), 0.001)
+      lb.90 <- MA_res()$b - (1.645*contour.seq)
+      ub.90 <- MA_res()$b + (1.645*contour.seq)
+      lb.95 <- MA_res()$b - (1.96* contour.seq)
+      ub.95 <- MA_res()$b + (1.96* contour.seq)
+      lb.99 <- MA_res()$b - (2.56* contour.seq)
+      ub.99 <- MA_res()$b + (2.56* contour.seq)
       
-      metafor::funnel(MA_res())
+      funn_df <- data.frame(contour.seq, lb.90,lb.90, ub.90, lb.95, ub.95,lb.99,
+                            ub.99)
       
+      #metafor::funnel(MA_res())
+      ggplot2::ggplot(data = forest_es(), aes(x = es, y = se)) +
+        #add studies
+        geom_point() +
+        #add summary effect line
+        #geom_linerange(aes(x = MA_res()$b, ymin = min(forest_es()$es), ymax = max(forest_es()$es)), color = "grey") +
+        #add contour lines for diff CI
+        geom_line(data = funn_df, aes(x = lb.90 , y = contour.seq ), linetype = 'dotted') +
+        geom_line(data = funn_df, aes(x = ub.90 , y = contour.seq ), linetype = 'dotted') +
+        geom_line(data = funn_df, aes(x = lb.95 , y = contour.seq ), linetype = 'dashed') +
+        geom_line(data = funn_df, aes(x = ub.95 , y = contour.seq ), linetype = 'dashed') +
+        geom_line(data = funn_df, aes(x = lb.99 , y = contour.seq )) +
+        geom_line(data = funn_df, aes(x = ub.99 , y = contour.seq )) +
+        scale_y_reverse() +
+        labs(
+          x = "Effect size",
+          y = "Standard Error",
+          title = "Funnel Plot"
+        ) +
+        theme_classic()
+        
+      
+    })
+    
+    #create a hover text showing which Study and crossref to funnel
+    output$hover_info <- renderPrint({
+      req(input$hover_plot2)
+      nearPoints(forest_es(), input$hover_plot2, xvar = "es", yvar = "se")
     })
     
     
