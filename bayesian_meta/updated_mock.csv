@@ -1,0 +1,21 @@
+unique_row,study_ID,long_cite,short_cite,peer_reviewed,Country,Grade,Sample_size,gender_1,gender_2,study_design,participant_design,implementation,duration_week,frequency_n,intensity_n,m1i,sd1i,N1i,m2i,sd2i,N2i,ai,bi,ci,di,ri,ni,t,F_stat,d,d_var,rob
+1,author1,Author1 et al. (2020). Study,Author1 (2020),Yes,USA,one,58,20,30,RCT,between,Teacher,NA,NA,NA,11.24,1.38,20,6.91,0.85,38,1,8,6,32,-0.12,2,NA,NA,NA,NA,low
+2,author2,Author2 et al. (2020). Study,Author2 (2020),Yes,USA,two,123,45,55,QES,between,Teacher,NA,NA,NA,7.37,0.79,50,5.78,1.07,73,6,31,15,61,-0.13,159,NA,NA,NA,NA,moderate
+3,author3,Author3 et al. (2020). Study,Author3 (2020),Yes,USA,one,230,50,60,RCT,between,Teacher,NA,NA,NA,9.23,1.43,100,8.02,1.23,130,6,94,2,113,-0.42,136,NA,NA,NA,NA,high
+4,author4,Author4 et al. (2020). Study,Author4 (2020),Yes,USA,two,78,55,45,QES,between,Teacher,NA,NA,NA,9.77,1.99,30,5.05,1.56,48,7,18,10,37,-0.1,127,NA,NA,NA,NA,low
+5,author5,Author5 et al. (2020). Study,Author5 (2020),Yes,USA,three,35,39,49,RCT,between,Teacher,NA,NA,NA,9.31,2.26,10,3.76,0.71,25,6,0,12,16,-0.13,3,NA,NA,NA,NA,moderate
+6,author6,Author6 et al. (2020). Study,Author6 (2020),Yes,USA,four,88,40,70,QES,between,Teacher,NA,NA,NA,8.29,1.33,30,7.37,1.52,58,7,23,9,40,0.68,13,NA,NA,NA,NA,high
+7,author7,Author7 et al. (2020). Study,Author7 (2020),Yes,USA,one,100,34,34,QES,between,Teacher,NA,NA,NA,11.52,1.4,50,4.88,1.13,50,3,31,1,39,-0.34,12,NA,NA,NA,NA,low
+8,author8,Author8 et al. (2020). Study,Author8 (2020),Yes,USA,one,58,20,30,RCT,between,Teacher,NA,NA,NA,8.31,0.79,20,9.39,1.42,38,6,8,2,19,0.03,193,NA,NA,NA,NA,moderate
+9,author9,Author9 et al. (2020). Study,Author9 (2020),Yes,USA,two,123,45,55,QES,between,Teacher,NA,NA,NA,12.54,1.68,50,5.64,1.37,73,5,31,2,72,-0.37,158,NA,NA,NA,NA,high
+10,author10,Author10 et al. (2020). Study,Author10 (2020),Yes,USA,one,230,50,60,RCT,between,Teacher,NA,NA,NA,8.37,1.24,100,7.81,1.29,130,1,94,11,119,-0.37,51,NA,NA,NA,NA,low
+11,author11,Author11 et al. (2020). Study,Author11 (2020),Yes,USA,two,78,55,45,QES,between,Teacher,NA,NA,NA,11.11,1.68,30,7.14,0.58,48,6,18,14,31,0.03,188,NA,NA,NA,NA,moderate
+12,author12,Author12 et al. (2020). Study,Author12 (2020),Yes,USA,three,35,39,49,RCT,between,Teacher,NA,NA,NA,13.07,1.78,10,4.93,0.96,25,1,0,2,8,-0.25,95,NA,NA,NA,NA,high
+13,author13,Author13 et al. (2020). Study,Author13 (2020),Yes,USA,four,88,40,70,QES,between,Teacher,NA,NA,NA,5.72,1.91,30,9.65,1.25,58,2,23,2,50,-0,165,NA,NA,NA,NA,low
+14,author14,Author14 et al. (2020). Study,Author14 (2020),Yes,USA,one,100,34,34,QES,between,Teacher,NA,NA,NA,7.94,1.26,50,7.79,0.62,50,7,31,10,39,-0.11,47,NA,NA,NA,NA,moderate
+15,author15,Author15 et al. (2020). Study,Author15 (2020),Yes,USA,one,58,20,30,QES,between,Teacher,NA,NA,NA,8.23,1.7,20,6.68,0.78,38,2,8,5,20,-0.15,56,NA,NA,NA,NA,high
+16,author16,Author16 et al. (2020). Study,Author16 (2020),Yes,USA,two,123,45,55,RCT,between,Teacher,NA,NA,NA,9.77,0.81,50,7.05,1.23,73,6,31,10,72,-0.51,144,NA,NA,NA,NA,low
+17,author17,Author17 et al. (2020). Study,Author17 (2020),Yes,USA,one,230,50,60,QES,between,Teacher,NA,NA,NA,7.93,1.19,100,7.86,1.31,130,6,94,17,124,-0.31,10,NA,NA,NA,NA,moderate
+18,author18,Author18 et al. (2020). Study,Author18 (2020),Yes,USA,two,78,55,45,RCT,between,Teacher,NA,NA,NA,3.19,1.16,30,6.68,1.19,48,6,18,17,46,0.04,153,NA,NA,NA,NA,high
+19,author19,Author19 et al. (2020). Study,Author19 (2020),Yes,USA,three,35,39,49,QES,between,Teacher,NA,NA,NA,3.62,0.53,10,0.51,0.65,25,6,0,5,11,0.14,196,NA,NA,NA,NA,low
+20,author20,Author20 et al. (2020). Study,Author20 (2020),Yes,USA,four,88,40,70,QES,between,Teacher,NA,NA,NA,11.14,1.51,30,7.07,0.56,58,7,23,3,53,-0.12,82,NA,NA,NA,NA,moderate
