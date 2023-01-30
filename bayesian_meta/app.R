@@ -42,7 +42,9 @@ ui <- fluidPage(
                    value = 5000,
                    min = 1000,
                    max = 20000,
-                   step = 1000)
+                   step = 1000),
+      actionButton(inputId = "go",
+                   label = "Run model")
       ),
     
     
@@ -92,7 +94,7 @@ server <- function(input, output) {
              prior_string(paste0(input$prior,"(0,0.05)"), class = "sd"))})
   
   
-  ma <- reactive({brm(yi|se(vi) ~ 1 + (1|study_ID),
+  ma <- eventReactive(input$go,{brm(yi|se(vi) ~ 1 + (1|study_ID),
                        data = ef(),
                        prior = prior(),
                        warmup = input$warmup, iter = input$iterations)
