@@ -2,6 +2,7 @@ library(shiny)
 library(metafor)
 library(brms)
 library(tidyverse)
+#library(tidybayes)
 
 d <- read.csv2("shared_reading_OSF.csv") %>%  mutate_all(~na_if(., ''))
 data <-  d %>% filter(!is.na(study_ID))
@@ -34,15 +35,15 @@ ui <- fluidPage(
       numericInput(inputId = "warmup",
                    label = "Choose number of practice iterations",
                    value = 2000,
-                   min = 1000,
+                   min = 500,
                    max = 10000,
-                   step = 1000),
+                   step = 500),
       numericInput(inputId = "iterations",
                    label = "Choose number of iterations (number can't be lower than practice iterations)",
                    value = 5000,
                    min = 1000,
-                   max = 20000,
-                   step = 1000),
+                   max = 10000,
+                   step = 500),
       actionButton(inputId = "go",
                    label = "Run model")
       ),
@@ -52,7 +53,7 @@ ui <- fluidPage(
       tabsetPanel(type = "tabs",
                   tabPanel("Posterior distribution",
                            plotOutput("Plot1")),
-                  tabPanel("Summary", textOutput("Summary")),
+                  tabPanel("Summary", verbatimTextOutput("Summary")),
                   tabPanel("Table", tableOutput("Table"))
       )
     )
@@ -94,25 +95,67 @@ server <- function(input, output) {
              prior_string(paste0(input$prior,"(0,0.05)"), class = "sd"))})
   
   
-  ma <- eventReactive(input$go,{brm(yi|se(vi) ~ 1 + (1|study_ID),
-                       data = ef(),
-                       prior = prior(),
-                       warmup = input$warmup, iter = input$iterations)
-#    #show progress of running the model
-#    withProgress(message = 'Calculation in progress',
-#                 detail = 'Higher number of iterations takes longer to run...',
-#                 {for (i in seq_len(input$iterations)) {
-#                   incProgress(100/ length(input$iterations))
-#                   Sys.sleep(0.5)      
-#                 }
-#                 })
-})
+  ma <- eventReactive(input$go, {
+    
+#    withProgress(
+#      
+#      message='Model is running',
+#      detail='More iterations can take longer to run',
+#      min = 0,
+#      max = input$iterations,
+#      
+#      {for (i in seq_len(input$iterations)) 
+#            { 
+#             incProgress(1 / length(input$iterations), detail = paste("iteration", i))
+#            }
+#        }
+      
+      brm(yi|se(vi) ~ 1 + (1|study_ID),
+          data = ef(),
+          prior = prior(),
+          warmup = input$warmup, iter = input$iterations)  
+#    )
+    
+   }
+)
   
-  output$Plot1 <- renderPlot({pp_check(ma())
-
+##################################
+#prepare data for the density plot
+  
+  post.samples <- reactive({
+    ma() %>% posterior::as_draws_df(., c("^b_", "^sd_"), regex = TRUE) %>% 
+      rename("smd" = "b_Intercept", "tau" = "sd_study_ID__Intercept")
   })
   
-  output$Summary <- renderPrint(summary(ma()))
+  output$Plot1 <- renderPlot({
+    
+    ggplot(aes(x = smd), data = post.samples()) +
+      geom_density(fill = "lightblue",                # set the color
+                   color = "lightblue", alpha = 0.7) +  
+      geom_point(y = 0,                               # add point at mean
+                 x = mean(post.samples()$smd)) +
+      labs(x = expression(italic(SMD)),
+           y = element_blank()) +
+      theme_minimal()
+    
+   #ggplot(aes(x = tau), data = post.samples()) +
+   #  geom_density(fill = "lightgreen",               # set the color
+   #               color = "lightgreen", alpha = 0.7) +  
+   #  geom_point(y = 0, 
+   #             x = mean(post.samples()$tau)) +        # add point at mean
+   #  labs(x = expression(tau),
+   #       y = element_blank()) +
+   #  theme_minimal()
+    #pp_check(ma())
+    })
+  
+  output$Summary <- renderPrint({
+    summary(ma())
+    })
+  
+  output$Table <- renderTable({
+    ef()
+    })
   
 }
 
