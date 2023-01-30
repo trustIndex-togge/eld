@@ -3,7 +3,8 @@ library(metafor)
 library(brms)
 library(tidyverse)
 
-data <- read.csv("updated_mock.csv")
+d <- read.csv2("shared_reading_OSF.csv") %>%  mutate_all(~na_if(., ''))
+data <-  d %>% filter(!is.na(study_ID))
 
 ##############################
 ui <- fluidPage(
