@@ -2,12 +2,12 @@ library(shiny)
 library(metafor)
 library(tidyverse)
 
-data <- read_csv("updated_mock.csv")
+data <- read_csv("data.csv") %>% filter(!is.na(study_ID))
 
 ############### user interface ####################
 ui <- fluidPage(
     # Application title
-    titlePanel("ELD Meta-analysis"),
+    titlePanel("Frequentist Meta-analysis"),
     
     # Sidebar with a choices input dropdown
     sidebarLayout(
@@ -90,8 +90,8 @@ server <- function(input, output) {
     })
     
     MA_res <- reactive({rma(ai = ai, bi = bi, ci = ci, di = di,
-                            m1i = m1i, sd1i = sd1i, n1i = N1i,
-                            m2i = m2i, sd2i = sd2i, n2i = N2i,
+                            m1i = m1i, sd1i = sd1i, n1i = n1i,
+                            m2i = m2i, sd2i = sd2i, n2i = n2i,
                             ni = ni, ri = ri,
                             method = input$ma_model, measure = input$effect_type, 
                             data = effectsinput(), slab = short_cite)}) ## create reactive ma dependent on input

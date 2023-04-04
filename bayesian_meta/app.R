@@ -4,8 +4,8 @@ library(brms)
 library(tidyverse)
 #library(tidybayes)
 
-d <- read.csv2("shared_reading_OSF.csv") %>%  mutate_all(~na_if(., ''))
-data <-  d %>% filter(!is.na(study_ID))
+d <- read.csv("data.csv")
+data <- d %>% filter(!is.na(study_ID))
 
 ##############################
 ui <- fluidPage(

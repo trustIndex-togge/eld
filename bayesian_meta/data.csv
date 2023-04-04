@@ -1,0 +1,111 @@
+unique_row,study_id,long_cite,short_cite,experiment_number,effect_size_number,peer_reviewed,country,mean_age,grade,sample_size,gender_1,gender_2,study_design,participant_design,implementation,duration_week,frequency_n,intensity_n,m1i,sd1i,n1i,m2i,sd2i,n2i,ai,bi,ci,di,ri,ni,t,f_stat,d,d_var,rob
+NA,Abel & Schuele 2014,NA,Abel & Schuele 2014,1,1,NA,NA,60,NA,35,NA,NA,RCT,within,NA,NA,NA,NA,6.51,2.8,35,10.4,2.8,35,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,low
+NA,Ard & Beverly 2004,NA,Ard & Beverly 2004,1,1,NA,NA,47,NA,10,NA,NA,quasi-experimental,within,NA,NA,NA,NA,0,0,10,5.3,1.7,10,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,moderate
+NA,NA,NA,NA,1,2,NA,NA,47,NA,20,NA,NA,quasi-experimental,within,NA,NA,NA,NA,0,0,20,7.45,2.15,20,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,high
+NA,NA,NA,NA,1,3,NA,NA,47,NA,10,NA,NA,quasi-experimental,within,NA,NA,NA,NA,0,0,10,7.1,2.08,10,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,low
+NA,Beck & McKeown 2007,NA,Beck & McKeown 2007,1,1,NA,NA,66,NA,26,NA,NA,quasi-experimental,within,NA,NA,NA,NA,9.96,2.74,26,14.54,3.68,26,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,moderate
+NA,NA,NA,NA,1,2,NA,NA,78,NA,26,NA,NA,quasi-experimental,within,NA,NA,NA,NA,12.25,2.93,26,15.89,3.98,26,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,high
+NA,NA,NA,NA,2,1,NA,NA,66,NA,36,NA,NA,quasi-experimental,within,NA,NA,NA,NA,7.17,2.46,36,12.67,3.27,36,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,low
+NA,NA,NA,NA,2,2,NA,NA,78,NA,40,NA,NA,quasi-experimental,within,NA,NA,NA,NA,7.98,2.77,40,12.97,3.23,40,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,moderate
+NA,Blewitt & Langan 2016,NA,Blewitt & Langan 2016,1,1,NA,NA,46,NA,40,NA,NA,quasi-experimental,within,NA,NA,NA,NA,0,0,40,3.45,1.62,40,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,high
+NA,"Blewitt et al., 2009",NA,"Blewitt et al., 2009",1,1,NA,NA,43,NA,11,NA,NA,quasi-experimental,within,NA,NA,NA,NA,0,0,11,3.91,2.34,11,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,low
+NA,NA,NA,NA,1,2,NA,NA,43,NA,11,NA,NA,quasi-experimental,within,NA,NA,NA,NA,0,0,11,4.55,2.25,11,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,moderate
+NA,NA,NA,NA,1,3,NA,NA,43,NA,47,NA,NA,quasi-experimental,within,NA,NA,NA,NA,0,0,47,6.61,1.76,47,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,high
+NA,NA,NA,NA,1,4,NA,NA,43,NA,47,NA,NA,quasi-experimental,within,NA,NA,NA,NA,0,0,47,7.18,1.91,47,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,low
+NA,NA,NA,NA,2,1,NA,NA,44,NA,50,NA,NA,quasi-experimental,within,NA,NA,NA,NA,2,1.16,50,5.63,1.92,50,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,moderate
+NA,"Brett et al., 1996",NA,"Brett et al., 1996",1,1,NA,NA,114,NA,56,NA,NA,quasi-experimental,within,NA,NA,NA,NA,5.78,2.6,56,5.67,2.8,56,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,high
+NA,NA,NA,NA,1,2,NA,NA,114,NA,56,NA,NA,quasi-experimental,within,NA,NA,NA,NA,5.78,2.6,56,5.84,3,56,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,low
+NA,NA,NA,NA,1,3,NA,NA,114,NA,58,NA,NA,quasi-experimental,within,NA,NA,NA,NA,4.86,2.7,58,11.38,5.4,58,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,moderate
+NA,NA,NA,NA,1,4,NA,NA,114,NA,58,NA,NA,quasi-experimental,within,NA,NA,NA,NA,4.86,2.7,58,11.12,5.4,58,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,high
+NA,Chen & Liu 2014,NA,Chen & Liu 2014,1,1,NA,NA,65,NA,33,NA,NA,quasi-experimental,within,NA,NA,NA,NA,0,0,33,8.28,2.96,33,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,low
+NA,Damhuis et al 2015,NA,Damhuis et al 2015,1,1,NA,NA,56.19,NA,31,NA,NA,RCT,within,NA,NA,NA,NA,10.84,2.68,31,11.45,3.68,31,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,low
+NA,NA,NA,NA,1,2,NA,NA,56.14,NA,61,NA,NA,RCT,within,NA,NA,NA,NA,9.38,3.2,61,13.75,3.35,61,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,moderate
+NA,NA,NA,NA,1,3,NA,NA,55.88,NA,33,NA,NA,RCT,within,NA,NA,NA,NA,9,3.86,33,13.73,3.35,33,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,high
+NA,Evans & Saint-Aubin 2013,NA,Evans & Saint-Aubin 2013,1,1,NA,NA,56,NA,36,NA,NA,RCT,within,NA,NA,NA,NA,2.7,1.57,36,3.7,1.63,36,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,low
+NA,Flack & Horst (unpublished),NA,Flack & Horst (unpublished),1,1,NA,NA,46,NA,21,NA,NA,RCT,within,NA,NA,NA,NA,0,0,21,1.46,0.62,21,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,moderate
+NA,NA,NA,NA,1,2,NA,NA,47,NA,21,NA,NA,RCT,within,NA,NA,NA,NA,0,0,21,1.72,0.48,21,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,high
+NA,"Flack & Horst, 2017",NA,"Flack & Horst, 2017",1,1,NA,NA,42,NA,36,NA,NA,RCT,within,NA,NA,NA,NA,0,0,36,1.29,0.61,36,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,low
+NA,NA,NA,NA,2,1,NA,NA,41,NA,12,NA,NA,RCT,within,NA,NA,NA,NA,0,0,12,1.76,0.34,12,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,moderate
+NA,Flack et al (unpublished),NA,Flack et al (unpublished),1,1,NA,NA,39,NA,12,NA,NA,RCT,within,NA,NA,NA,NA,0,0,12,1.54,0.54,12,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,high
+NA,NA,NA,NA,1,2,NA,NA,38,NA,12,NA,NA,RCT,within,NA,NA,NA,NA,0,0,12,1.04,0.84,12,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,low
+NA,NA,NA,NA,2,1,NA,NA,41,NA,18,NA,NA,RCT,within,NA,NA,NA,NA,0,0,18,1.08,0.6,18,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,moderate
+NA,NA,NA,NA,2,2,NA,NA,42,NA,18,NA,NA,RCT,within,NA,NA,NA,NA,0,0,18,0.94,0.94,18,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,high
+NA,Horohov & Oetting 2004,NA,Horohov & Oetting 2004,1,1,NA,NA,71.72,NA,18,NA,NA,RCT,within,NA,NA,NA,NA,0,0,18,11.09,3.17,18,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,low
+NA,NA,NA,NA,1,2,NA,NA,53.58,NA,18,NA,NA,RCT,within,NA,NA,NA,NA,0,0,18,7.22,2.56,18,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,moderate
+NA,Horst (unpub A),NA,Horst (unpub A),1,1,NA,NA,42,NA,30,NA,NA,quasi-experimental,within,NA,NA,NA,NA,0,0,30,1.67,0.61,30,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,high
+NA,Horst (unpub B),NA,Horst (unpub B),1,1,NA,NA,35,NA,26,NA,NA,quasi-experimental,within,NA,NA,NA,NA,0,0,26,1.25,0.55,26,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,low
+NA,"Horst et al., 2011",NA,"Horst et al., 2011",1,1,NA,NA,43,NA,8,NA,NA,quasi-experimental,within,NA,NA,NA,NA,0,0,8,1.86,0.78,8,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,moderate
+NA,NA,NA,NA,1,2,NA,NA,43,NA,8,NA,NA,quasi-experimental,within,NA,NA,NA,NA,0,0,8,3.96,1.02,8,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,high
+NA,NA,NA,NA,1,3,NA,NA,43,NA,8,NA,NA,quasi-experimental,within,NA,NA,NA,NA,0,0,8,3.5,1.41,8,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,low
+NA,NA,NA,NA,1,4,NA,NA,43,NA,8,NA,NA,quasi-experimental,within,NA,NA,NA,NA,0,0,8,4.88,0.99,8,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,low
+NA,"Houston-Price et al., 2014",NA,"Houston-Price et al., 2014",1,1,NA,NA,57,NA,75,NA,NA,quasi-experimental,within,NA,NA,NA,NA,0,0,75,3.88,1.76,75,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,moderate
+NA,NA,NA,NA,1,2,NA,NA,75,NA,70,NA,NA,quasi-experimental,within,NA,NA,NA,NA,0,0,70,6.2,2.01,70,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,high
+NA,Justice 2002,NA,Justice 2002,1,1,NA,NA,47,NA,23,NA,NA,quasi-experimental,within,NA,NA,NA,NA,0,0,23,3.33,1.34,23,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,low
+NA,"Kaefer et al., 2014",NA,"Kaefer et al., 2014",1,1,NA,NA,59.3,NA,76,NA,NA,quasi-experimental,within,NA,NA,NA,NA,0,0,76,1.6,1.1,76,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,moderate
+NA,NA,NA,NA,2,1,NA,NA,59.3,NA,58,NA,NA,quasi-experimental,within,NA,NA,NA,NA,0,0,58,1,1.12,58,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,high
+NA,"Mandel et al., 2013",NA,"Mandel et al., 2013",1,1,NA,NA,72,NA,44,NA,NA,quasi-experimental,within,NA,NA,NA,NA,0.35,0.15,44,0.54,0.13,44,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,low
+NA,McLeod & McDade 2011,NA,McLeod & McDade 2011,1,1,NA,NA,47,NA,22,NA,NA,quasi-experimental,within,NA,NA,NA,NA,0,0,22,3.55,1.61,22,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,moderate
+NA,NA,NA,NA,1,2,NA,NA,47,NA,22,NA,NA,quasi-experimental,within,NA,NA,NA,NA,0,0,22,2.64,1.47,22,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,high
+NA,"Pinkham et al., 2014",NA,"Pinkham et al., 2014",1,1,NA,NA,62,NA,60,NA,NA,quasi-experimental,within,NA,NA,NA,NA,0,0,60,1.04,0.92,60,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,low
+NA,"Pullen et al., 2010",NA,"Pullen et al., 2010",1,1,NA,NA,72,NA,126,NA,NA,quasi-experimental,within,NA,NA,NA,NA,0,0,126,6.96,1.43,126,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,moderate
+NA,NA,NA,NA,1,2,NA,NA,72,NA,126,NA,NA,quasi-experimental,within,NA,NA,NA,NA,0,0,126,7,1.24,126,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,high
+NA,Ralli & Dockrell 2005,NA,Ralli & Dockrell 2005,1,1,NA,NA,48,NA,64,NA,NA,RCT,within,NA,NA,NA,NA,0,0,64,1.61,0.7,64,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,low
+NA,NA,NA,NA,1,1,NA,NA,60,NA,64,NA,NA,RCT,within,NA,NA,NA,NA,0,0,64,1.55,0.75,64,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,moderate
+NA,NA,NA,NA,1,1,NA,NA,79,NA,64,NA,NA,RCT,within,NA,NA,NA,NA,0,0,64,1.77,0.61,64,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,high
+NA,NA,NA,NA,1,1,NA,NA,48,NA,64,NA,NA,RCT,within,NA,NA,NA,NA,0,0,64,1.8,0.44,64,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,low
+NA,NA,NA,NA,1,2,NA,NA,60,NA,64,NA,NA,RCT,within,NA,NA,NA,NA,0,0,64,1.95,0.21,64,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,moderate
+NA,NA,NA,NA,1,3,NA,NA,79,NA,64,NA,NA,RCT,within,NA,NA,NA,NA,0,0,64,1.97,0.18,64,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,high
+NA,"Ramachandra et al., 2011",NA,"Ramachandra et al., 2011",1,1,NA,NA,55,NA,40,NA,NA,quasi-experimental,within,NA,NA,NA,NA,0,0,40,3.45,1.43,40,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,low
+NA,Robbins & Ehri 1994,NA,Robbins & Ehri 1994,1,1,NA,NA,74,NA,33,NA,NA,quasi-experimental,within,NA,NA,NA,NA,0,0,33,4.39,2,33,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,low
+NA,Senechal & Cornell 1993,NA,Senechal & Cornell 1993,1,1,NA,NA,49,NA,20,NA,NA,quasi-experimental,within,NA,NA,NA,NA,1.3,1.03,20,2.55,1.32,20,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,moderate
+NA,NA,NA,NA,1,2,NA,NA,62,NA,20,NA,NA,quasi-experimental,within,NA,NA,NA,NA,1.95,2.01,20,3.65,2.18,20,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,high
+NA,NA,NA,NA,1,3,NA,NA,49,NA,60,NA,NA,quasi-experimental,within,NA,NA,NA,NA,1.7,1.3,60,3.05,1.68,60,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,low
+NA,NA,NA,NA,1,4,NA,NA,62,NA,60,NA,NA,quasi-experimental,within,NA,NA,NA,NA,1.7,1.37,60,3.48,1.78,60,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,moderate
+NA,NA,NA,NA,1,5,NA,NA,49,NA,20,NA,NA,quasi-experimental,within,NA,NA,NA,NA,1.3,1.03,20,3.4,1.35,20,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,high
+NA,NA,NA,NA,1,6,NA,NA,62,NA,20,NA,NA,quasi-experimental,within,NA,NA,NA,NA,1.95,2.01,20,4.2,1.91,20,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,low
+NA,NA,NA,NA,1,7,NA,NA,49,NA,60,NA,NA,quasi-experimental,within,NA,NA,NA,NA,1.7,1.3,60,3.53,1.53,60,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,moderate
+NA,NA,NA,NA,1,8,NA,NA,62,NA,60,NA,NA,quasi-experimental,within,NA,NA,NA,NA,1.7,1.37,60,4.38,1.92,60,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,high
+NA,Senechal 1997,NA,Senechal 1997,1,1,NA,NA,49,NA,20,NA,NA,quasi-experimental,within,NA,NA,NA,NA,2.8,1.3,20,3.2,1.5,20,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,low
+NA,NA,NA,NA,1,2,NA,NA,49,NA,20,NA,NA,quasi-experimental,within,NA,NA,NA,NA,3.3,1.1,20,4.6,1.6,20,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,moderate
+NA,NA,NA,NA,1,3,NA,NA,49,NA,20,NA,NA,quasi-experimental,within,NA,NA,NA,NA,2.7,1.4,20,5.6,1.9,20,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,high
+NA,"Senechal et al., 1995",NA,"Senechal et al., 1995",1,1,NA,NA,57,NA,16,NA,NA,quasi-experimental,within,NA,NA,NA,NA,3.5,1.85,16,4.2,1.8,16,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,low
+NA,NA,NA,NA,1,2,NA,NA,57,NA,16,NA,NA,quasi-experimental,within,NA,NA,NA,NA,3.5,1.85,16,4.5,1.85,16,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,moderate
+NA,NA,NA,NA,1,3,NA,NA,57,NA,16,NA,NA,quasi-experimental,within,NA,NA,NA,NA,3.9,1.75,16,5.95,2.5,16,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,high
+NA,NA,NA,NA,1,4,NA,NA,57,NA,16,NA,NA,quasi-experimental,within,NA,NA,NA,NA,3.9,1.75,16,6.5,2.25,16,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,low
+NA,NA,NA,NA,2,1,NA,NA,48,NA,16,NA,NA,quasi-experimental,within,NA,NA,NA,NA,2.2,1.35,16,2.7,0.95,16,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,moderate
+NA,NA,NA,NA,2,2,NA,NA,48,NA,16,NA,NA,quasi-experimental,within,NA,NA,NA,NA,2.2,1.35,16,2.7,1.4,16,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,high
+NA,NA,NA,NA,2,3,NA,NA,48,NA,32,NA,NA,quasi-experimental,within,NA,NA,NA,NA,1.9,1.13,32,3.85,1.75,32,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,low
+NA,NA,NA,NA,2,4,NA,NA,48,NA,32,NA,NA,quasi-experimental,within,NA,NA,NA,NA,1.9,1.13,32,4.3,1.73,32,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,low
+NA,"Strasser et al., 2013",NA,"Strasser et al., 2013",1,1,NA,NA,50,NA,72,NA,NA,quasi-experimental,within,NA,NA,NA,NA,3.71,1.69,72,5.84,2.01,72,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,moderate
+NA,"Suggate et al., 2013",NA,"Suggate et al., 2013",1,1,NA,NA,102,NA,20,NA,NA,quasi-experimental,within,NA,NA,NA,NA,0,0,20,3.2,1.54,20,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,high
+NA,NA,NA,NA,1,2,NA,NA,122,NA,17,NA,NA,quasi-experimental,within,NA,NA,NA,NA,0,0,17,4.24,1.2,17,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,low
+NA,"Teepe et al., 2017",NA,"Teepe et al., 2017",1,1,NA,NA,39,NA,44,NA,NA,quasi-experimental,within,NA,NA,NA,NA,21.32,4.47,44,22.11,4.84,44,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,moderate
+NA,Walsh & Blewitt 2006,NA,Walsh & Blewitt 2006,1,1,NA,NA,44.28666667,NA,12,NA,NA,quasi-experimental,within,NA,NA,NA,NA,1.92,0.9,12,3.83,0.94,12,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,high
+NA,NA,NA,NA,1,2,NA,NA,44.28666667,NA,23,NA,NA,quasi-experimental,within,NA,NA,NA,NA,1.96,1.45,23,6.89,1.21,23,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,low
+NA,Walsh & Rose 2013,NA,Walsh & Rose 2013,1,1,NA,NA,51,NA,14,NA,NA,quasi-experimental,within,NA,NA,NA,NA,4.64,1.15,14,8.14,0.95,14,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,moderate
+NA,NA,NA,NA,1,2,NA,NA,51,NA,28,NA,NA,quasi-experimental,within,NA,NA,NA,NA,4.51,2.01,28,7.54,1.94,28,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,high
+NA,Wilkinson & Houston-Price 2013,NA,Wilkinson & Houston-Price 2013,1,1,NA,NA,87,NA,18,NA,NA,quasi-experimental,within,NA,NA,NA,NA,2.4,1.5,18,4.3,1.4,18,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,low
+NA,NA,NA,NA,1,2,NA,NA,87,NA,16,NA,NA,quasi-experimental,within,NA,NA,NA,NA,1.6,0.89,16,4.3,1.5,16,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,moderate
+NA,NA,NA,NA,1,3,NA,NA,87,NA,21,NA,NA,quasi-experimental,within,NA,NA,NA,NA,2.2,1.2,21,4.9,1.7,21,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,high
+NA,NA,NA,NA,1,4,NA,NA,87,NA,16,NA,NA,quasi-experimental,within,NA,NA,NA,NA,1.6,0.89,16,3.9,2.3,16,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,low
+NA,NA,NA,NA,1,5,NA,NA,111,NA,15,NA,NA,quasi-experimental,within,NA,NA,NA,NA,2.2,0.78,15,3.9,1.7,15,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,moderate
+NA,NA,NA,NA,1,6,NA,NA,111,NA,17,NA,NA,quasi-experimental,within,NA,NA,NA,NA,2.1,1.3,17,5.2,1.3,17,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,high
+NA,NA,NA,NA,1,7,NA,NA,111,NA,18,NA,NA,quasi-experimental,within,NA,NA,NA,NA,1.8,1.2,18,5.6,1.1,18,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,low
+NA,NA,NA,NA,1,8,NA,NA,111,NA,21,NA,NA,quasi-experimental,within,NA,NA,NA,NA,2.2,1.3,21,5.5,0.98,21,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,moderate
+NA,NA,NA,NA,1,9,NA,NA,87,NA,18,NA,NA,quasi-experimental,within,NA,NA,NA,NA,2.4,1.5,18,4.4,1.5,18,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,high
+NA,NA,NA,NA,1,10,NA,NA,87,NA,16,NA,NA,quasi-experimental,within,NA,NA,NA,NA,1.6,0.89,16,3.8,2,16,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,low
+NA,NA,NA,NA,1,11,NA,NA,87,NA,21,NA,NA,quasi-experimental,within,NA,NA,NA,NA,2.2,1.2,21,5.2,1.3,21,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,low
+NA,NA,NA,NA,1,12,NA,NA,87,NA,16,NA,NA,quasi-experimental,within,NA,NA,NA,NA,1.6,0.89,16,4.9,2,16,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,moderate
+NA,NA,NA,NA,1,13,NA,NA,111,NA,15,NA,NA,quasi-experimental,within,NA,NA,NA,NA,2.2,0.78,15,4.5,1.6,15,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,high
+NA,NA,NA,NA,1,14,NA,NA,111,NA,17,NA,NA,quasi-experimental,within,NA,NA,NA,NA,2.1,1.3,17,5,1.4,17,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,low
+NA,NA,NA,NA,1,15,NA,NA,111,NA,18,NA,NA,quasi-experimental,within,NA,NA,NA,NA,1.8,1.2,18,5.9,1.1,18,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,moderate
+NA,NA,NA,NA,1,16,NA,NA,111,NA,21,NA,NA,quasi-experimental,within,NA,NA,NA,NA,2.2,1.3,21,4.6,1.3,21,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,high
+NA,Williams & Horst (unpub A),NA,Williams & Horst (unpub A),1,1,NA,NA,63,NA,12,NA,NA,RCT,within,NA,NA,NA,NA,0,0,12,1.34,0.5,12,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,low
+NA,NA,NA,NA,2,1,NA,NA,42,NA,12,NA,NA,RCT,within,NA,NA,NA,NA,0,0,12,1.52,0.62,12,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,moderate
+NA,NA,NA,NA,1,3,NA,NA,63,NA,12,NA,NA,RCT,within,NA,NA,NA,NA,0,0,12,1.52,0.36,12,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,high
+NA,Williams & Horst (unpub B),NA,Williams & Horst (unpub B),1,1,NA,NA,42,NA,12,NA,NA,RCT,within,NA,NA,NA,NA,0,0,12,2.22,0.6,12,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,low
+NA,NA,NA,NA,1,2,NA,NA,42,NA,12,NA,NA,RCT,within,NA,NA,NA,NA,0,0,12,2.7,0.9,12,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,moderate
+NA,Williams & Horst 2014,NA,Williams & Horst 2014,1,1,NA,NA,42,NA,24,NA,NA,RCT,within,NA,NA,NA,NA,0,0,24,1.55,0.57,24,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,high
+NA,NA,NA,NA,1,2,NA,NA,42,NA,24,NA,NA,RCT,within,NA,NA,NA,NA,0,0,24,1.13,0.65,24,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,low
+NA,NA,NA,NA,1,1,NA,NA,42,NA,24,NA,NA,RCT,within,NA,NA,NA,NA,0,0,24,1.46,0.66,24,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,moderate
+NA,NA,NA,NA,1,2,NA,NA,42,NA,24,NA,NA,RCT,within,NA,NA,NA,NA,0,0,24,0.76,0.81,24,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,high
