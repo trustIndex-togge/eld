@@ -4,8 +4,20 @@ library(brms)
 library(tidyverse)
 #library(tidybayes)
 
-d <- read.csv("data.csv")
-data <- d %>% filter(!is.na(study_ID))
+#set where the datasets are TODO: change this to the actual repository url once we have it
+data_dir <- "../csv_files"
+
+# list the CSV files 
+data_files <- list.files(path = data_dir, pattern = ".csv")
+
+datasets <- setNames(lapply(data_files, function(file) {
+  data <- read_csv(file.path(data_dir, file)) %>%
+    mutate(rob_either = ifelse(is.na(rob), robins, rob)) %>% 
+    filter(!is.na(study_id))
+  return(data)
+}
+), 
+tools::file_path_sans_ext(data_files))
 
 ##############################
 ui <- fluidPage(
@@ -15,9 +27,12 @@ ui <- fluidPage(
   # Sidebar with a choices input dropdown
   sidebarLayout(
     sidebarPanel(
+      selectInput("dataset", "Select Dataset", choices = names(datasets)),
+      downloadButton(outputId = "download",
+                     label = "Download the dataset"),
       selectInput(inputId =  "prior",
                   label = "Choose prior for Tau2",
-                  choices = c("Cauchy" = "cauchy", 
+                  choices = c("Half-Cauchy" = "cauchy", 
                               "Student-t" = "student_t", 
                               "normal" = "normal")),
       selectInput(inputId =  "prior_es",
@@ -27,11 +42,14 @@ ui <- fluidPage(
                               "normal" = "normal")),
       selectInput(inputId =  "design",
                   label = "Select design",
-                  choices = c("All", unique(data$study_design))),
+                  choices = c("All", unique(datasets[[1]]$study_design))),
+      selectInput(inputId = "grade",
+                  label = "Select grade",
+                  choices = c("All", unique(unique(unlist(strsplit(unique(as.character(datasets[[1]]$grade)), ":")))))),
       checkboxGroupInput(inputId = "rob", 
                          label = "Select risk of bias",
-                         c(unique(data$rob)),
-                         selected = (unique(data$rob))),
+                         choices = unique(datasets[[1]]$rob_either),
+                         selected = unique(datasets[[1]]$rob_either)),
       numericInput(inputId = "warmup",
                    label = "Choose number of practice iterations",
                    value = 2000,
@@ -61,30 +79,59 @@ ui <- fluidPage(
 )
 
 ##############################
-server <- function(input, output) {
+server <- function(input, output, session) {
   
-
-  robfilter <- reactive({data %>% filter(
-    rob %in% input$rob) 
+  #set up updating input boxes based on changed datasets
+  unique_designs <- reactive({
+    unique(datasets[[input$dataset]]$study_design)
   })
   
-  
-  effectsinput <- reactive({                #### Create reactive dataframe based on selected study design and grade
-    
-    if  (any(input$design == "All")) {
-      robfilter()
-    } else {
-      robfilter() %>% filter(
-        study_design == input$design)}
-    
-    
+  unique_grades <- reactive({
+    unique(unlist(strsplit(unique(as.character(datasets[[input$dataset]]$grade)), ":")))
   })
   
+  unique_robs <- reactive({
+    unique(datasets[[input$dataset]]$rob_either)
+  })
+  
+  observe({
+    updateSelectInput(session, "design",
+                      label = "Select design",
+                      choices = c("All", unique_designs()),
+                      selected = "All")
+    
+    updateSelectInput(session, "grade",
+                      label = "Select grade",
+                      choices = c("All", unique_grades()),
+                      selected = "All")
+    
+    updateCheckboxGroupInput(session, "rob",
+                             label = "Select risk of bias",
+                             choices = unique_robs(),
+                             selected = unique_robs())
+  })
+  
+  # create the reactive dataset
+  effectsinput <- reactive({
+    data <- datasets[[input$dataset]]
+    
+    if (input$design != "All") {
+      data <- data %>% filter(study_design == input$design)
+    }
+    
+    if (input$grade != "All") {
+      data <- data %>% filter(str_detect(grade, input$grade))
+    }
+    
+    data <- data %>% filter(rob_either %in% input$rob)
+    
+    return(data)
+  })
   
   #############################################
   
-  ef <- reactive({escalc("SMD", data = effectsinput(), m1i = m1i, n1i = N1i, sd1i = sd1i,
-               m2i = m2i, n2i = N2i, sd2i = sd2i)})
+  ef <- reactive({escalc("SMD", data = effectsinput(), m1i = m1i, n1i = n1i, sd1i = sd1i,
+               m2i = m2i, n2i = n2i, sd2i = sd2i)})
   
   
   ##############################
@@ -97,24 +144,10 @@ server <- function(input, output) {
   
   ma <- eventReactive(input$go, {
     
-#    withProgress(
-#      
-#      message='Model is running',
-#      detail='More iterations can take longer to run',
-#      min = 0,
-#      max = input$iterations,
-#      
-#      {for (i in seq_len(input$iterations)) 
-#            { 
-#             incProgress(1 / length(input$iterations), detail = paste("iteration", i))
-#            }
-#        }
-      
       brm(yi|se(vi) ~ 1 + (1|study_ID),
           data = ef(),
           prior = prior(),
           warmup = input$warmup, iter = input$iterations)  
-#    )
     
    }
 )
@@ -138,15 +171,6 @@ server <- function(input, output) {
            y = element_blank()) +
       theme_minimal()
     
-   #ggplot(aes(x = tau), data = post.samples()) +
-   #  geom_density(fill = "lightgreen",               # set the color
-   #               color = "lightgreen", alpha = 0.7) +  
-   #  geom_point(y = 0, 
-   #             x = mean(post.samples()$tau)) +        # add point at mean
-   #  labs(x = expression(tau),
-   #       y = element_blank()) +
-   #  theme_minimal()
-    #pp_check(ma())
     })
   
   output$Summary <- renderPrint({
@@ -156,6 +180,15 @@ server <- function(input, output) {
   output$Table <- renderTable({
     ef()
     })
+  
+  output$download <- downloadHandler(
+    filename = function() {
+      paste("data-", Sys.Date(), ".csv", sep="")
+    },
+    content = function(file) {
+      write.csv(data, file)
+    }
+  )
   
 }
 

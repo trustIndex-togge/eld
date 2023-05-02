@@ -2,38 +2,63 @@ library(shiny)
 library(metafor)
 library(tidyverse)
 
-data <- read_csv("data.csv") %>% filter(!is.na(study_ID))
+#set where the datasets are TODO: change this to the actual repository url once we have it
+data_dir <- "../csv_files"
+
+# list the CSV files 
+data_files <- list.files(path = data_dir, pattern = ".csv")
+
+datasets <- setNames(lapply(data_files, function(file) {
+  data <- read_csv(file.path(data_dir, file)) %>%
+    mutate(rob_either = ifelse(is.na(rob), robins, rob)) %>% 
+    filter(!is.na(study_id))
+  return(data)
+}
+), 
+tools::file_path_sans_ext(data_files))
 
 ############### user interface ####################
 ui <- fluidPage(
+  
+    # website prep
+    tags$head(tags$link(rel = "stylesheet", href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css")),
+    theme = bslib::bs_theme(version = 4),
     # Application title
     titlePanel("Frequentist Meta-analysis"),
     
     # Sidebar with a choices input dropdown
     sidebarLayout(
         sidebarPanel(
+            selectInput("dataset", "Select Dataset", choices = names(datasets)),
+            downloadButton(outputId = "download",
+                           label = "Download the dataset"),
+            tags$div(
             selectInput(inputId =  "effect_type",
-                        label = "Select effect",
-                        choices = c("Odds ratio" = "OR", 
-                                    "Relative risk" = "RR", 
+                        label = HTML("Select effect <i class='fas fa-question-circle'></i>"),
+                        choices = c(#"Odds ratio" = "OR", 
+                                    #"Relative risk" = "RR", 
                                     "Hedge's g" = "SMD", 
-                                    "Fisher's z" = "ZCOR")),
+                                    "Fisher's z" = "ZCOR"),
+                        selected = "SMD"),
+                        title = "Effect size is the magnitude of a relationship or difference between measure points or groups. \n Depending on type of data, we have difference effect size measures. Most common one for measuring the difference between two groups is Hedge's g, which is a standardized mean difference. \n  For correlational studies, we use Fisher's z, which is a z-transformatio of the Pearson's corelation coefficient (r).",
+                        `data-toggle` = "tooltip"),
             selectInput(inputId = "ma_model",
                         label = "Select meta-analysis model",
                         choices = c("Fixed-effects" = "FE", 
                                     "Restricted Maximum likelihood Estimator" = "REML",
                                     "DerSimonian-Laird" = "DL",
-                                    "Paule-Mandel estimator" = "PM")),
-            selectInput(inputId =  "design",
-                        label = "Select design",
-                        choices = c("All", unique(data$study_design))),
-            selectInput(inputId = "grade",
-                        label = "Select grade",
-                        choices = c("All", unique(data$Grade))),
-            checkboxGroupInput(inputId = "rob", 
-                               label = "Select risk of bias",
-                               c(unique(data$rob)),
-                               selected = (unique(data$rob))),
+                                    "Paule-Mandel estimator" = "PM"),
+                        selected = "REML"),
+           selectInput(inputId =  "design",
+                       label = "Select design",
+                       choices = c("All", unique(datasets[[1]]$study_design))),
+           selectInput(inputId = "grade",
+                       label = "Select grade",
+                       choices = c("All", unique(unique(unlist(strsplit(unique(as.character(datasets[[1]]$grade)), ":")))))),
+           checkboxGroupInput(inputId = "rob", 
+                              label = "Select risk of bias",
+                              choices = unique(datasets[[1]]$rob_either),
+                              selected = unique(datasets[[1]]$rob_either)),
             numericInput(inputId = "conf",
                          label = "Select confidence",
                          value = 0.05,
@@ -41,9 +66,8 @@ ui <- fluidPage(
                          max = 0.1,
                          step = 0.001
             ),
-        ),
-        
-        
+        ), 
+       # main panel with output plots 
         mainPanel(
             tabsetPanel(type = "tabs",
                         tabPanel("Plots",
@@ -59,36 +83,55 @@ ui <- fluidPage(
 
 ############### server ############################
 
-server <- function(input, output) {
+server <- function(input, output, session) {
+  
+  #set up updating input boxes based on changed datasets
+  unique_designs <- reactive({
+    unique(datasets[[input$dataset]]$study_design)
+  })
+  
+  unique_grades <- reactive({
+    unique(unlist(strsplit(unique(as.character(datasets[[input$dataset]]$grade)), ":")))
+  })
+  
+  unique_robs <- reactive({
+    unique(datasets[[input$dataset]]$rob_either)
+  })
+  
+  observe({
+    updateSelectInput(session, "design",
+                      label = "Select design",
+                      choices = c("All", unique_designs()),
+                      selected = "All")
     
-    ########### sub-grouping function #############
+    updateSelectInput(session, "grade",
+                      label = "Select grade",
+                      choices = c("All", unique_grades()),
+                      selected = "All")
     
-    datagrade <- reactive({                 #### Create reactive dataframe based on selected grade
-        
-        if (any(input$grade == "All")) {
-            data
-        } else {
-            data %>% filter(
-                Grade == input$grade)}
-    })
+    updateCheckboxGroupInput(session, "rob",
+                             label = "Select risk of bias",
+                             choices = unique_robs(),
+                             selected = unique_robs())
+  })
+  
+  # create the reactive dataset
+  effectsinput <- reactive({
+    data <- datasets[[input$dataset]]
     
+    if (input$design != "All") {
+      data <- data %>% filter(study_design == input$design)
+    }
     
-    robfilter <- reactive({datagrade() %>% filter(
-        rob %in% input$rob) 
-    })
+    if (input$grade != "All") {
+      data <- data %>% filter(str_detect(grade, input$grade))
+    }
     
+    data <- data %>% filter(rob_either %in% input$rob)
     
-    effectsinput <- reactive({                #### Create reactive dataframe based on selected study design and grade
-        
-        if  (any(input$design == "All")) {
-            robfilter()
-        } else {
-            robfilter() %>% filter(
-                study_design == input$design)}
-        
-        
-    })
-    
+    return(data)
+  })
+  ################## meta-analysis part #############################  
     MA_res <- reactive({rma(ai = ai, bi = bi, ci = ci, di = di,
                             m1i = m1i, sd1i = sd1i, n1i = n1i,
                             m2i = m2i, sd2i = sd2i, n2i = n2i,
@@ -102,27 +145,12 @@ server <- function(input, output) {
                                             lo.ci = MA_res()$yi - qnorm(1-(input$conf/2)) * sqrt(MA_res()$vi),  
                                             up.ci = MA_res()$yi + qnorm(1-(input$conf/2)) * sqrt(MA_res()$vi))
                                  )}) 
-    #############################
-    ### ma based on effect types
-    #############################
+    
+
     
     ###########################
-    ### Models print text summary
-    
+    ### Models print text summary   
     output$Summary <- renderPrint({
-        
-        # name all possible arguments to calculate effects
-        # filter the method and the effect based on inputs
-        
-        ## TODO: have pred function after to create predictive intervals and exp logs
-        # MA_res <- reactive({rma(ai = ai, bi = bi, ci = ci, di = di,
-        #                         m1i = m1i, sd1i = sd1i, n1i = N1i,
-        #                         m2i = m2i, sd2i = sd2i, n2i = N2i,
-        #                         ni = ni, ri = ri,
-        #                         method = input$ma_model, measure = input$effect_type, 
-        #                         data = effectsinput(), slab = short_cite)}) ## create reactive ma dependent on input
-        # 
-        # add ifelse function to exponentiate log results - TODO
         print(paste("This meta-analysis was conducted using the ", MA_res()$method , " tau estimator, and the average effect of the intervention was ", 
                     MA_res()$b, " , (", (1-input$conf)*100, " % CI [ ", MA_res()$ci.lb, MA_res()$ci.ub, " ], 95% PI [ ", 
                     MA_res()$pi.lb, MA_res()$pi.ub, " ], z = ", MA_res()$zval, " , p = ", 
@@ -133,23 +161,9 @@ server <- function(input, output) {
     })    
     
     
-    ####### forest plots
+    ############## forest plots #############
     
     output$Plot1 <- renderPlot({
-        
-        # MA_res <- reactive({rma(ai = ai, bi = bi, ci = ci, di = di,
-        #                         m1i = m1i, sd1i = sd1i, n1i = N1i,
-        #                         m2i = m2i, sd2i = sd2i, n2i = N2i,
-        #                         ni = ni, ri = ri,
-        #                         method = input$ma_model, measure = input$effect_type, 
-        #                         data = effectsinput(), slab = short_cite)}) ## create reactive ma dependent on input
-        # 
-        # forest_es <- reactive({rbind(data.frame(es=MA_res()$yi, se=sqrt(MA_res()$vi), #effect size and sd
-        #                                         study=as_factor(MA_res()$slab), #study label
-        #                                         #calculate lower and upper bound 95% conf interval
-        #                                         #TODO:change 1.96 into a criterion variable so conf int can be chosen
-        #                                         lo.ci = MA_res()$yi - 1.96 * sqrt(MA_res()$vi),  
-        #                                         up.ci = MA_res()$yi + 1.96 * sqrt(MA_res()$vi)))}) 
         
         robcol <- c("high"="maroon4", "moderate"="darkgoldenrod4", "low"="royalblue4")
       
@@ -163,8 +177,8 @@ server <- function(input, output) {
                                           round(1.1*max(forest_es()$up.ci), 0))) +
             geom_pointrange(aes(x = MA_res()$b, xmin = MA_res()$ci.lb, xmax = MA_res()$ci.ub), colour = "grey") + #add average effects estimate
             #scale_x_log10() + TODO: what should be transformed and what not
-            geom_point(aes(colour=factor(effectsinput()$rob))) +#add effect sizes
-            geom_linerange(aes(xmin = lo.ci, xmax = up.ci, colour=factor(effectsinput()$rob))) + #add conf intervals
+            geom_point(aes(colour=factor(effectsinput()$rob_either))) +#add effect sizes
+            geom_linerange(aes(xmin = lo.ci, xmax = up.ci, colour=factor(effectsinput()$rob_either))) + #add conf intervals
             #geom_vline(xintercept = MA_res()$b, colour = "blue") + #intercept line based on average effect
             scale_color_manual(values = robcol) +
             labs(
@@ -185,12 +199,13 @@ server <- function(input, output) {
       
       #create the contour line (code by jksakaluk https://tinyurl.com/3bdznjav)
       contour.seq <- seq(0, max(forest_es()$se), 0.001)
-      lb.90 <- MA_res()$b - (1.645*contour.seq)
-      ub.90 <- MA_res()$b + (1.645*contour.seq)
-      lb.95 <- MA_res()$b - (1.96* contour.seq)
-      ub.95 <- MA_res()$b + (1.96* contour.seq)
-      lb.99 <- MA_res()$b - (2.56* contour.seq)
-      ub.99 <- MA_res()$b + (2.56* contour.seq)
+      lb.90 <- as.vector(MA_res()$b) - (1.645 * contour.seq)
+      ub.90 <- as.vector(MA_res()$b) + (1.645 * contour.seq)
+      lb.95 <- as.vector(MA_res()$b) - (1.96 * contour.seq)
+      ub.95 <- as.vector(MA_res()$b) + (1.96 * contour.seq)
+      lb.99 <- as.vector(MA_res()$b) - (2.56 * contour.seq)
+      ub.99 <- as.vector(MA_res()$b) + (2.56 * contour.seq)
+      
       
       funn_df <- data.frame(contour.seq, lb.90,lb.90, ub.90, lb.95, ub.95,lb.99,
                             ub.99)
@@ -231,6 +246,15 @@ server <- function(input, output) {
         effectsinput()
         
     })
+    
+    output$download <- downloadHandler(
+      filename = function() {
+        paste("data-", Sys.Date(), ".csv", sep="")
+      },
+      content = function(file) {
+        write.csv(data, file)
+      }
+    )
     
 }
 
