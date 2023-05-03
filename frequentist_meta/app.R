@@ -52,6 +52,9 @@ ui <- fluidPage(
            selectInput(inputId =  "design",
                        label = "Select design",
                        choices = c("All", unique(datasets[[1]]$study_design))),
+           selectInput(inputId =  "outcomes",
+                       label = "Select outcomes",
+                       choices = c("All", unique(datasets[[1]]$outcome_full))),
            selectInput(inputId = "grade",
                        label = "Select grade",
                        choices = c("All", unique(unique(unlist(strsplit(unique(as.character(datasets[[1]]$grade)), ":")))))),
@@ -90,6 +93,10 @@ server <- function(input, output, session) {
     unique(datasets[[input$dataset]]$study_design)
   })
   
+  unique_outcomes <- reactive({
+    unique(datasets[[input$dataset]]$outcome_full)
+  })
+  
   unique_grades <- reactive({
     unique(unlist(strsplit(unique(as.character(datasets[[input$dataset]]$grade)), ":")))
   })
@@ -99,9 +106,15 @@ server <- function(input, output, session) {
   })
   
   observe({
+
     updateSelectInput(session, "design",
                       label = "Select design",
                       choices = c("All", unique_designs()),
+                      selected = "All")
+    
+    updateSelectInput(session, "outcomes",
+                      label = "Select outcomes",
+                      choices = c("All", unique_outcomes()),
                       selected = "All")
     
     updateSelectInput(session, "grade",
