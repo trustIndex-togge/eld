@@ -77,12 +77,12 @@ ui <- fluidPage(
                                  plotOutput("Plot1", hover = hoverOpts(id ="hover_plot1")),
                                  plotOutput("Plot2", hover = hoverOpts(id ="hover_plot2")),
                                  verbatimTextOutput("hover_info")),
-                        tabPanel("Summary", textOutput("Summary")),
+                        tabPanel("Summary", htmlOutput("Summary")),
                         tabPanel("Table", tableOutput("Table"))
             )
         )
-    )
-)
+    ) #sidebarlayout
+) #fluidpage
 
 ############### server ############################
 
@@ -133,7 +133,11 @@ server <- function(input, output, session) {
     data <- datasets[[input$dataset]]
     
     if (input$design != "All") {
-      data <- data %>% filter(study_design == input$design)
+      data <- data %>% filter(study_design %in% input$design)
+    }
+    
+    if (input$outcomes != "All") {
+      data <- data %>% filter(outcome_full %in% input$outcomes)
     }
     
     if (input$grade != "All") {
@@ -163,13 +167,71 @@ server <- function(input, output, session) {
     
     ###########################
     ### Models print text summary   
-    output$Summary <- renderPrint({
-        print(paste("This meta-analysis was conducted using the ", MA_res()$method , " tau estimator, and the average effect of the intervention was ", 
-                    MA_res()$b, " , (", (1-input$conf)*100, " % CI [ ", MA_res()$ci.lb, MA_res()$ci.ub, " ], 95% PI [ ", 
-                    MA_res()$pi.lb, MA_res()$pi.ub, " ], z = ", MA_res()$zval, " , p = ", 
-                    round(MA_res()$pval, digits = 10), " Total variance was tau2 = ", 
-                    round(MA_res()$tau2, digits = 2),  " (SD of the true effects across studies was tau = ", 
-                    round(sqrt(MA_res()$tau2), digits = 2),"), and the heterogeneity was I2 = ", MA_res()$I2, "%."))
+    output$Summary <- renderUI({
+      
+        # explain different effect sizes depending on effect chosen
+        e_size <- if (abs(MA_res()$b) <= 0.2) {
+          "small effect size that could have practical meaning for interventions that solve highly influential problems. For example, improvement of this size might be considered meaningful for students that struggle academically but improve with better peer support"
+        } else if (abs(MA_res()$b) > 0.2 & MA_res()$b <= 0.8) {
+          "moderate effect size, which on its own already presents practical implications, as long as the costs of the intervention don't overshadow the benefit, for example, implementing the Letter Reading intervention might provide a moderate effect size on reading, but the cost of implementation might not justify it"
+        } else if (abs(MA_res()$b) > 0.8) {
+          "large effect size which shows clear practical implications and justify its implementations in classrooms if possible"
+        }
+        conditional_text <- if (input$effect_type == "SMD") {
+          paste0("<br><br> Hedge's g, similar to Cohen's d, is a standardised mean difference between two groups. 
+                 Common interpretations of magnitude of this effect is: small effect size (g = 0.2), moderate (0.5), and large (> 0.8). 
+                 <br><br> These are rough guidelines, and should usually be interpreted in context of other variables. The effect size in this meta-analysis g = ",
+                 round(MA_res()$b, digits = 3), " could be interpreted as a ", e_size, ". <br><br> Note that the sign of the effect implies direction, with the negative sign implying worse performance by the intervention group, and positive a better performance for the intervention group.")
+        } else if (input$effect_type == "ZCOR") {
+          paste0("<br><br> Fisher's z transformation is used to transform Pearson's correlation coefficients to a normally distributed variable, and is used in meta-analyses as an effect size of a relationship between two variables. An example of that relationship might be the attitudes about school and age. Larger z-scores imply a stronger relationship between the variables, and the sign represents a negative (decrease in one variable implies increase in other) or a positive relationship (both variables increase or decrease).
+                 As a rule of thumb, we can interpret z-scores larger than 0.55 as strong relationship, with the z-score of this meta-analysis being z = ",
+                 round(MA_res()$b, digits = 3), ".")
+        }
+        
+        
+          
+        text <- paste0(# first summarize the results of the analysis
+                      "This meta-analysis was conducted using the ", 
+                       strong(MA_res()$method), 
+                       " tau estimator, and the average effect of the intervention was ", 
+                        strong(MA_res()$b), 
+                       ", ", 
+                       strong((1-input$conf)*100), 
+                       " % CI [ ", 
+                       strong(MA_res()$ci.lb), 
+                       strong(MA_res()$ci.ub), 
+                       " ], 95% PI [ ", 
+                       strong(MA_res()$pi.lb), 
+                       strong(MA_res()$pi.ub), 
+                       " ], z = ", 
+                       strong(MA_res()$zval), 
+                       " , p = ", 
+                      strong(round(MA_res()$pval, digits = 10)),
+                      " Total variance was tau\u00B2 = ", 
+                      strong(round(MA_res()$tau2, digits = 2)),
+                      " (SD of the true effects across studies was tau = ", 
+                     strong(round(sqrt(MA_res()$tau2), digits = 2)),
+                     "), and the heterogeneity was I\u00B2 = ", 
+                     strong(MA_res()$I2), 
+                     "%. <br><br>",
+                     
+                     # now comes explanation of used moderators if any
+                     "This analysis was done on the studies belonging to the following subgroups: <br>
+                     Studies that implemented designs: ",
+                     paste(unique(input$design), collapse = ", "), "<br>",
+                     "Studies that measured these outcomes: ",
+                     paste(unique(input$outcomes), collapse = ", "), "<br>",
+                     "Studies that included participants attending these grades: ",
+                     paste(unique(input$grade), collapse = ", "), " <br>",
+                     "Studies with the following risk of bias: ",
+                     paste(unique(input$rob), collapse = ", "), ".",
+                     
+                     
+                     # now explain meaning
+                     conditional_text
+                     
+                     )
+        HTML(text)
         
     })    
     

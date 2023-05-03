@@ -131,6 +131,10 @@ server <- function(input, output, session) {
       data <- data %>% filter(study_design == input$design)
     }
     
+    if (input$outcomes != "All") {
+      data <- data %>% filter(outcome_full %in% input$outcomes)
+    }
+    
     if (input$grade != "All") {
       data <- data %>% filter(str_detect(grade, input$grade))
     }
@@ -156,7 +160,7 @@ server <- function(input, output, session) {
   
   ma <- eventReactive(input$go, {
     
-      brm(yi|se(vi) ~ 1 + (1|study_ID),
+      brm(yi|se(vi) ~ 1 + (1|study_id),
           data = ef(),
           prior = prior(),
           warmup = input$warmup, iter = input$iterations)  
@@ -169,7 +173,7 @@ server <- function(input, output, session) {
   
   post.samples <- reactive({
     ma() %>% posterior::as_draws_df(., c("^b_", "^sd_"), regex = TRUE) %>% 
-      rename("smd" = "b_Intercept", "tau" = "sd_study_ID__Intercept")
+      rename("smd" = "b_Intercept", "tau" = "sd_study_id__Intercept")
   })
   
   output$Plot1 <- renderPlot({
