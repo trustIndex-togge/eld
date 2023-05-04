@@ -1,5 +1,7 @@
 library(shiny)
 library(metafor)
+library(rmarkdown)
+library(knitr)
 library(tidyverse)
 
 #set where the datasets are TODO: change this to the actual repository url once we have it
@@ -52,10 +54,10 @@ ui <- fluidPage(
            selectInput(inputId =  "design",
                        label = "Select design",
                        choices = c("All", unique(datasets[[1]]$study_design))),
-           selectInput(inputId =  "outcomes",
+           checkboxGroupInput(inputId =  "outcomes",
                        label = "Select outcomes",
                        choices = c("All", unique(datasets[[1]]$outcome_full))),
-           selectInput(inputId = "grade",
+           checkboxGroupInput(inputId = "grade",
                        label = "Select grade",
                        choices = c("All", unique(unique(unlist(strsplit(unique(as.character(datasets[[1]]$grade)), ":")))))),
            checkboxGroupInput(inputId = "rob", 
@@ -73,12 +75,20 @@ ui <- fluidPage(
        # main panel with output plots 
         mainPanel(
             tabsetPanel(type = "tabs",
-                        tabPanel("Plots",
-                                 plotOutput("Plot1", hover = hoverOpts(id ="hover_plot1")),
+                        tabPanel("Forest plot",
+                                 wellPanel(style = "padding: 5px; border: solid 1px #337ab7; border-radius: 1px;",
+                                           p("Pooled effect", style = "color: #337ab7;"),
+                                           textOutput("effect")),
+                                 plotOutput("Plot1")),
+                        tabPanel("Publication bias",
+                                 h3("Egger's regression test"),
+                                 verbatimTextOutput("regtest"),
+                                 h3("Funnel plot"),
                                  plotOutput("Plot2", hover = hoverOpts(id ="hover_plot2")),
-                                 verbatimTextOutput("hover_info")),
+                                 verbatimTextOutput("hover_info2")),
                         tabPanel("Summary", htmlOutput("Summary")),
                         tabPanel("Table", tableOutput("Table"))
+                        
             )
         )
     ) #sidebarlayout
@@ -112,12 +122,12 @@ server <- function(input, output, session) {
                       choices = c("All", unique_designs()),
                       selected = "All")
     
-    updateSelectInput(session, "outcomes",
+    updateCheckboxGroupInput(session, "outcomes",
                       label = "Select outcomes",
                       choices = c("All", unique_outcomes()),
                       selected = "All")
     
-    updateSelectInput(session, "grade",
+    updateCheckboxGroupInput(session, "grade",
                       label = "Select grade",
                       choices = c("All", unique_grades()),
                       selected = "All")
@@ -132,19 +142,24 @@ server <- function(input, output, session) {
   effectsinput <- reactive({
     data <- datasets[[input$dataset]]
     
+    
     if (input$design != "All") {
       data <- data %>% filter(study_design %in% input$design)
     }
     
+    
     if (input$outcomes != "All") {
       data <- data %>% filter(outcome_full %in% input$outcomes)
     }
+
     
     if (input$grade != "All") {
       data <- data %>% filter(str_detect(grade, input$grade))
     }
     
+    
     data <- data %>% filter(rob_either %in% input$rob)
+    
     
     return(data)
   })
@@ -163,12 +178,15 @@ server <- function(input, output, session) {
                                             up.ci = MA_res()$yi + qnorm(1-(input$conf/2)) * sqrt(MA_res()$vi))
                                  )}) 
     
-
+    pred <- reactive({
+      predict(MA_res())
+    })
     
     ###########################
     ### Models print text summary   
     output$Summary <- renderUI({
       
+    
         # explain different effect sizes depending on effect chosen
         e_size <- if (abs(MA_res()$b) <= 0.2) {
           "small effect size that could have practical meaning for interventions that solve highly influential problems. For example, improvement of this size might be considered meaningful for students that struggle academically but improve with better peer support"
@@ -191,29 +209,31 @@ server <- function(input, output, session) {
         
           
         text <- paste0(# first summarize the results of the analysis
-                      "This meta-analysis was conducted using the ", 
-                       strong(MA_res()$method), 
-                       " tau estimator, and the average effect of the intervention was ", 
-                        strong(MA_res()$b), 
-                       ", ", 
-                       strong((1-input$conf)*100), 
-                       " % CI [ ", 
-                       strong(MA_res()$ci.lb), 
-                       strong(MA_res()$ci.ub), 
-                       " ], 95% PI [ ", 
-                       strong(MA_res()$pi.lb), 
-                       strong(MA_res()$pi.ub), 
-                       " ], z = ", 
-                       strong(MA_res()$zval), 
-                       " , p = ", 
-                      strong(round(MA_res()$pval, digits = 10)),
-                      " Total variance was tau\u00B2 = ", 
-                      strong(round(MA_res()$tau2, digits = 2)),
-                      " (SD of the true effects across studies was tau = ", 
-                     strong(round(sqrt(MA_res()$tau2), digits = 2)),
-                     "), and the heterogeneity was I\u00B2 = ", 
-                     strong(MA_res()$I2), 
-                     "%. <br><br>",
+          "This meta-analysis was conducted using the ", 
+          strong(MA_res()$method), 
+          " tau estimator, and the average effect of the intervention was ", 
+          strong(if (is.numeric(MA_res()$b)) round(MA_res()$b, digits = 2) else MA_res()$b), 
+          ", ", 
+          strong((1-input$conf)*100), 
+          " % CI [ ", 
+          strong(if (is.numeric(MA_res()$ci.lb)) round(MA_res()$ci.lb, digits = 2) else MA_res()$ci.lb), 
+          ", ",
+          strong(if (is.numeric(MA_res()$ci.ub)) round(MA_res()$ci.ub, digits = 2) else MA_res()$ci.ub), 
+          " ], 95% PI [ ", 
+          strong(if (is.numeric(pred()$pi.lb)) round(pred()$pi.lb, digits = 2) else pred()$pi.lb), 
+          ", ",
+          strong(if (is.numeric(pred()$pi.ub)) round(pred()$pi.ub, digits = 2) else pred()$pi.ub), 
+          " ], z = ", 
+          strong(if (is.numeric(MA_res()$zval)) round(MA_res()$zval, digits = 2) else MA_res()$zval), 
+          " , p = ", 
+          strong(if (is.numeric(MA_res()$pval)) round(MA_res()$pval, digits = 10) else MA_res()$pval),
+          " Total variance was tau\u00B2 = ", 
+          strong(if (is.numeric(MA_res()$tau2)) round(MA_res()$tau2, digits = 2) else MA_res()$tau2),
+          " (SD of the true effects across studies was tau = ", 
+          strong(if (is.numeric(MA_res()$tau2)) round(sqrt(MA_res()$tau2), digits = 2) else sqrt(MA_res()$tau2)),
+          "), and the heterogeneity was I\u00B2 = ", 
+          strong(if (is.numeric(MA_res()$I2)) round(MA_res()$I2, digits = 2) else MA_res()$I2), 
+          "%. <br><br>",
                      
                      # now comes explanation of used moderators if any
                      "This analysis was done on the studies belonging to the following subgroups: <br>
@@ -235,8 +255,36 @@ server <- function(input, output, session) {
         
     })    
     
+    # from reporter() in metafor
+    report_path <- tempfile(fileext = ".Rmd")
+    file.copy("report.Rmd", report_path, overwrite = TRUE)
+    
+    render_report <- function(input, output, params) {
+      rmarkdown::render(input,
+                        output_file = output,
+                        params = params,
+                        envir = new.env(parent = globalenv())
+      )
+    }
+    
     
     ############## forest plots #############
+    output$effect <- renderText({
+      paste0("ES = ", round(MA_res()$b, digits = 2), ", 95% CI (", round(MA_res()$ci.lb, digits = 2), ", ", round(MA_res()$ci.ub, digits = 2), ")",
+             ", k = ", MA_res()$k)
+    })
+    
+    
+    height <- function() {
+      if (nrow(forest_es()) < 5) 
+        400
+       else if (nrow(forest_es()) >= 5 & nrow(forest_es()) < 15) 
+        600
+       else if (nrow(forest_es()) >= 15 & nrow(forest_es()) < 25) 
+        850
+      else if (nrow(forest_es()) >= 25) 
+        950
+    }
     
     output$Plot1 <- renderPlot({
         
@@ -260,15 +308,22 @@ server <- function(input, output, session) {
                 x = "Effect size and CI",
                 y = "Study",
                 colour = "Risk of Bias",
-                title = "Meta Analaysis of dataset", #add variables that change depending on dataset,
-                subtitle = "Link to dataset" #add dataset url
+                title = paste0("Meta Analysis of ", input$dataset)
             ) +
-            theme_classic()
+            theme_classic() +
+            theme(axis.text = element_text(face="bold"))
         
         
-    })
-    
+    }, height = height)
 
+    
+############### Publication bias ##########################
+
+    
+    output$regtest <- renderPrint({
+      eggers <- regtest(MA_res())
+      eggers
+    })
     
     output$Plot2 <- renderPlot({
       
@@ -308,14 +363,17 @@ server <- function(input, output, session) {
         
       
     })
+
     
     #create a hover text showing which Study and crossref to funnel
-    output$hover_info <- renderPrint({
+    output$hover_info2 <- renderPrint({
       req(input$hover_plot2)
       nearPoints(forest_es(), input$hover_plot2, xvar = "es", yvar = "se")
     })
     
-    
+ 
+
+################ rest #########################   
     output$Table <- renderTable({
         # TODO: make it nicer
         effectsinput()

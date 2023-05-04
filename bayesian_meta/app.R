@@ -15,7 +15,8 @@ data_files <- list.files(path = data_dir, pattern = ".csv")
 datasets <- setNames(lapply(data_files, function(file) {
   data <- read_csv(file.path(data_dir, file)) %>%
     mutate(rob_either = ifelse(is.na(rob), robins, rob)) %>% 
-    filter(!is.na(study_id))
+    filter(!is.na(study_id)) %>% 
+    mutate(study_id = paste0(study_id, "_", seq_along(study_id)))
   return(data)
 }
 ), 
@@ -59,10 +60,10 @@ ui <- fluidPage(
       selectInput(inputId =  "design",
                   label = "Select design",
                   choices = c("All", unique(datasets[[1]]$study_design))),
-      selectInput(inputId =  "outcomes",
+      checkboxGroupInput(inputId =  "outcomes",
                   label = "Select outcomes",
                   choices = c("All", unique(datasets[[1]]$outcome_full))),
-      selectInput(inputId = "grade",
+      checkboxGroupInput(inputId = "grade",
                   label = "Select grade",
                   choices = c("All", unique(unique(unlist(strsplit(unique(as.character(datasets[[1]]$grade)), ":")))))),
       checkboxGroupInput(inputId = "rob", 
@@ -130,12 +131,12 @@ server <- function(input, output, session) {
                       choices = c("All", unique_designs()),
                       selected = "All")
     
-    updateSelectInput(session, "outcomes",
+    updateCheckboxGroupInput(session, "outcomes",
                       label = "Select outcomes",
                       choices = c("All", unique_outcomes()),
                       selected = "All")
     
-    updateSelectInput(session, "grade",
+    updateCheckboxGroupInput(session, "grade",
                       label = "Select grade",
                       choices = c("All", unique_grades()),
                       selected = "All")
@@ -202,11 +203,17 @@ server <- function(input, output, session) {
           data = ef(),
           prior = prior(),
           warmup = input$warmup, 
-          iter = input$iterations)  
+          iter = input$iterations)
     
-   }
-)
+
+    
+   })#%>% bindCache(list(input$prior, input$prior_sd_slide, input$prior_es,
+     #           input$prior_es_sd_slide, input$design, input$outcomes, 
+     #           input$grade, input$rob, input$warmup, input$iterations,
+     #            post.samples(), study.draws(), pooled.effect.draws(), forest.data(),
+     #           forest.data.summary(), ma(), prior()), cache = "session") 
   
+
 ################################## Posterior distribution ####################
 #prepare data for the density plot
   # code from https://bookdown.org/MathiasHarrer/Doing_Meta_Analysis_in_R/bayesian-ma.html#priors
@@ -244,6 +251,18 @@ server <- function(input, output, session) {
   
   
 # plots start here  
+  
+  height <- function() {
+    if (nrow(ef()) < 5) 
+      200
+    else if (nrow(ef()) >= 5 & nrow(ef()) < 15) 
+      400
+    else if (nrow(ef()) >= 15 & nrow(ef()) < 25) 
+      650
+    else if (nrow(ef()) >= 25) 
+      950
+  }
+  
   output$Plot_posterior <- renderPlot({
     
     ggplot(aes(x = es), data = post.samples()) +
@@ -255,7 +274,11 @@ server <- function(input, output, session) {
            y = element_blank()) +
       theme_minimal()
     
-    })
+    }) #%>%  bindCache(list(input$prior, input$prior_sd_slide, input$prior_es,
+       #                              input$prior_es_sd_slide, input$design, input$outcomes, 
+       #                              input$grade, input$rob, input$warmup, input$iterations,
+       #                              post.samples(), study.draws(), pooled.effect.draws(), forest.data(),
+       #                              forest.data.summary(), ma(), prior()), cache = "session") %>% bindEvent(input$go)
   
   output$Plot_forest <- renderPlot({
     ggplot(aes(b_Intercept, 
@@ -285,8 +308,13 @@ server <- function(input, output, session) {
                     x = (max(b_Intercept) + 4), hjust = "inward")) +
       labs(x = "Effect size", # summary measure
            y = element_blank()) +
-      theme_minimal()
-  })
+      theme_minimal() +
+      theme(axis.text = element_text(face="bold"))
+  }, height = height) # %>% bindCache(list(input$prior, input$prior_sd_slide, input$prior_es,
+     #                   input$prior_es_sd_slide, input$design, input$outcomes, 
+     #                   input$grade, input$rob, input$warmup, input$iterations,
+     #                   post.samples(), study.draws(), pooled.effect.draws(), forest.data(),
+     #                   forest.data.summary(), ma(), prior()), cache = "session") %>% bindEvent(input$go)
 
 ############### Results #####################  
   
