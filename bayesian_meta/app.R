@@ -14,9 +14,11 @@ data_files <- list.files(path = data_dir, pattern = ".csv")
 
 datasets <- setNames(lapply(data_files, function(file) {
   data <- read_csv(file.path(data_dir, file)) %>%
-    mutate(rob_either = ifelse(is.na(rob), robins, rob)) %>% 
+    mutate(rob_either = ifelse(is.na(rob), robins, rob),
+           outcome_full = ifelse(is.na(outcome_full), "Outcome missing", outcome_full),
+           grade = ifelse(is.na(grade), "Grade missing", grade)) %>% 
     filter(!is.na(study_id)) %>% 
-    mutate(study_id = paste0(study_id, "_", seq_along(study_id)))
+    mutate(study_id = paste0(study_id, "_", seq_along(study_id))) 
   return(data)
 }
 ), 
@@ -61,12 +63,13 @@ ui <- fluidPage(
                   label = "Select design",
                   choices = c("All", unique(datasets[[1]]$study_design))),
       checkboxGroupInput(inputId =  "outcomes",
-                  label = "Select outcomes",
-                  choices = c("All", unique(datasets[[1]]$outcome_full))),
+                         label = "Select outcomes",
+                         choices = unique(datasets[[1]]$outcome_full),
+                         selected = unique(datasets[[1]]$outcome_full)),
       checkboxGroupInput(inputId = "grade",
-                  label = "Select grade",
-                  choices = c("All", unique(unique(unlist(strsplit(unique(as.character(datasets[[1]]$grade)), ":")))))),
-      checkboxGroupInput(inputId = "rob", 
+                         label = "Select grade",
+                         choices = unique(unlist(strsplit(datasets[[1]]$grade, ":"))),
+                         selected = unique(unlist(strsplit(datasets[[1]]$grade, ":")))), checkboxGroupInput(inputId = "rob", 
                          label = "Select risk of bias",
                          choices = unique(datasets[[1]]$rob_either),
                          selected = unique(datasets[[1]]$rob_either)),
@@ -108,6 +111,7 @@ ui <- fluidPage(
 ##############################
 server <- function(input, output, session) {
   
+  
   #set up updating input boxes based on changed datasets
   unique_designs <- reactive({
     unique(datasets[[input$dataset]]$study_design)
@@ -118,7 +122,7 @@ server <- function(input, output, session) {
   })
   
   unique_grades <- reactive({
-    unique(unlist(strsplit(unique(as.character(datasets[[input$dataset]]$grade)), ":")))
+    unique(unique(unlist(strsplit(datasets[[input$dataset]]$grade, ":"))))
   })
   
   unique_robs <- reactive({
@@ -126,20 +130,21 @@ server <- function(input, output, session) {
   })
   
   observe({
+    
     updateSelectInput(session, "design",
                       label = "Select design",
                       choices = c("All", unique_designs()),
                       selected = "All")
     
     updateCheckboxGroupInput(session, "outcomes",
-                      label = "Select outcomes",
-                      choices = c("All", unique_outcomes()),
-                      selected = "All")
+                             label = "Select outcomes",
+                             choices = unique_outcomes(),
+                             selected = unique_outcomes())
     
     updateCheckboxGroupInput(session, "grade",
-                      label = "Select grade",
-                      choices = c("All", unique_grades()),
-                      selected = "All")
+                             label = "Select grade",
+                             choices = unique_grades(),
+                             selected = unique_grades())
     
     updateCheckboxGroupInput(session, "rob",
                              label = "Select risk of bias",
@@ -151,19 +156,20 @@ server <- function(input, output, session) {
   effectsinput <- reactive({
     data <- datasets[[input$dataset]]
     
+    
     if (input$design != "All") {
-      data <- data %>% filter(study_design == input$design)
+      data <- data %>% filter(study_design %in% input$design)
     }
     
-    if (input$outcomes != "All") {
-      data <- data %>% filter(outcome_full %in% input$outcomes)
-    }
+    data <- data %>% filter(outcome_full %in% input$outcomes)
     
-    if (input$grade != "All") {
-      data <- data %>% filter(str_detect(grade, input$grade))
-    }
+    
+    data <- data %>% filter(str_detect(grade, paste(input$grade, collapse = "|")))
+    
+    
     
     data <- data %>% filter(rob_either %in% input$rob)
+    
     
     return(data)
   })
